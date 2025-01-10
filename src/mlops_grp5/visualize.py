@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 
+
 def plot_placeholder_loss():
     """Placeholder function to plot the loss of a model.
     This function is used to demonstrate the use of the visualize module.

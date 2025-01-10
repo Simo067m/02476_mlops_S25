@@ -1,9 +1,9 @@
-import typer
-import torch
 import os
-
 from pathlib import Path
-from torch.utils.data import Dataset, DataLoader
+
+import torch
+from torch.utils.data import DataLoader, Dataset
+
 
 class PlaceHolderDataset(Dataset):
     """

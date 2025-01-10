@@ -1,10 +1,9 @@
-from pytorch_lightning import Trainer
 import torch
-
 from model import PlaceHolderModel
-from data import get_placeholder_dataloader
+from pytorch_lightning import Trainer
 from visualize import plot_placeholder_loss
 
+from data import get_placeholder_dataloader
 
 if __name__ == "__main__":
     trainer = Trainer(max_epochs=10, accelerator="gpu", devices=1, logger=False, enable_checkpointing=False)
