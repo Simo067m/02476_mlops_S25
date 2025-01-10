@@ -17,17 +17,19 @@ The classification should be done on images, so an end user can upload images of
 
 ### Framework
 
-We will use Pytorch and in extension of this, Pytorch Lightning to take advantage of their train and eval functions.
+We will use Pytorch and in extension of this, Pytorch Lightning to take advantage of their train and eval functions.<br>
+We will also be using sklearn for model evaluation functions.
 
 ### Data
 
 We will use image data of fresh and rotten vegetables from a Kaggle dataset:
-https://www.kaggle.com/datasets/muhriddinmuxiddinov/fruits-and-vegetables-dataset
-(size = 920 MB, 12000 images)
+https://www.kaggle.com/datasets/muhriddinmuxiddinov/fruits-and-vegetables-dataset<br>
+(size = 920 MB, 12000 images)<br>
+The data consists of images of 5 different fruits and 5 different vegetables, where each has a fresh and rotten image pair.
 
 ### Models
 
-We will use one (or more) of the pre-trained models from Pytorch-image-models, and fine-tune it on our dataset.
+We will use one (or more) of the pre-trained models from Pytorch-image-models, and fine-tune it on our dataset. From these we will focus on choosing low size, high speed models which can have a fast inference rate and can run in the cloud for cheap.
 
 
 ## Project structure
