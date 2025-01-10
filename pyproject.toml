@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools"]
+requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -28,6 +28,9 @@ dev = {file = ['requirements_dev.txt']}
 [tool.ruff]
 line-length = 120
 select = ["I"]
+
+[tool.mypy]
+ignore_missing_imports = true
 
 [tool.coverage.run]
 omit = ["tests/*"]
