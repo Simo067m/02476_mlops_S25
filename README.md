@@ -7,6 +7,13 @@ Katharina Strauss Søgaard - s214634
 Cecilie Dahl Hvilsted - s214605
 Simon Stenbæk Jensen - s214592
 
+# Project description
+
+**Freshness classification of fruits and vegetables via image recognition**
+
+### Data
+https://www.kaggle.com/datasets/muhriddinmuxiddinov/fruits-and-vegetables-dataset
+
 ## Project structure
 
 The directory structure of the project looks like this:
