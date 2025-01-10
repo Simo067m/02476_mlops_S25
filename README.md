@@ -8,11 +8,25 @@ Cecilie Dahl Hvilsted - s214605
 Simon Stenbæk Jensen - s214592
 
 # Project description
-
 **Freshness classification of fruits and vegetables via image recognition**
 
+### Goal of project
+
+Create a model that can classify fruits and vegetables into fresh or rotten, to help users determine wether their food is edible or unedible, to reduce food waste. 
+
+### Framework
+
+We will use Pytorch-image-models to take advantage of their train, eval functions as well as the pretrained models. 
+
 ### Data
+
 https://www.kaggle.com/datasets/muhriddinmuxiddinov/fruits-and-vegetables-dataset
+(size = 920 MB, 12000 images)
+
+### Models
+
+We will use one (or more) of the models from the Pytorch-image-models, and fine-tune it on our dataset.
+
 
 ## Project structure
 
