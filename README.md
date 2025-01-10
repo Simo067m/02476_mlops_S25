@@ -12,20 +12,22 @@ Simon Stenbæk Jensen - s214592
 
 ### Goal of project
 
-Create a model that can classify fruits and vegetables into fresh or rotten, to help users determine wether their food is edible or unedible, to reduce food waste. 
+Create a model that can classify fruits and vegetables into fresh or rotten, to help users determine wether their food is edible or unedible, to reduce food waste<br>
+The classification should be done on images, so an end user can upload images of their own fruits and vegetables to tell freshness.
 
 ### Framework
 
-We will use Pytorch-image-models to take advantage of their train, eval functions as well as the pretrained models. 
+We will use Pytorch and in extension of this, Pytorch Lightning to take advantage of their train and eval functions.
 
 ### Data
 
+We will use image data of fresh and rotten vegetables from a Kaggle dataset:
 https://www.kaggle.com/datasets/muhriddinmuxiddinov/fruits-and-vegetables-dataset
 (size = 920 MB, 12000 images)
 
 ### Models
 
-We will use one (or more) of the models from the Pytorch-image-models, and fine-tune it on our dataset.
+We will use one (or more) of the pre-trained models from Pytorch-image-models, and fine-tune it on our dataset.
 
 
 ## Project structure
