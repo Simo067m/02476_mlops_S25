@@ -1,6 +1,11 @@
 # mlops_grp5
 
-January 2025 version of 02476 Machine Learning Operations
+January 2025 version of 02476 Machine Learning Operations.
+
+Group 5:
+Katharina Strauss Søgaard - s214634
+Cecilie Dahl Hvilsted - s214605
+Simon Stenbæk Jensen - s214592
 
 ## Project structure
 
