@@ -4,13 +4,13 @@ from model import PlaceHolderModel
 from pytorch_lightning import Trainer
 from visualize import plot_placeholder_loss
 
-from dataloaders import get_placeholder_dataloader
+from dataloaders import get_fruits_and_vegetables_dataloaders
 
 if __name__ == "__main__":
     device = "gpu" if torch.cuda.is_available() else "cpu"
     trainer = Trainer(max_epochs=10, accelerator=device, devices=1, logger=False, enable_checkpointing=False)
-    model = PlaceHolderModel()
-    train_loader, test_loader = get_placeholder_dataloader()
+    train_loader, test_loader = get_fruits_and_vegetables_dataloaders()
+    """
     trainer.fit(model, train_loader)
     trainer.test(model, test_loader)
     print("Training and testing complete.")
@@ -22,3 +22,4 @@ if __name__ == "__main__":
         os.makedirs("reports/figures")
     plot_placeholder_loss()
     print("Loss plot saved.")
+    """

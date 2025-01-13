@@ -3,23 +3,20 @@ from pathlib import Path
 
 import torch
 from torch.utils.data import DataLoader, Dataset
-from torchvision import datasets, transforms
 import torchvision.io
 
 import matplotlib.pyplot as plt
-import numpy as np
 
+# Seed for reproducibility
+torch.manual_seed(0)
 
-class PlaceHolderDataset(Dataset):
+class FruitsVegetablesDataset(Dataset):
     """
-    Placeholder dataset class for setting up the dataloading pipeline
-    data_path is unused in this example, but is included to show that it can be used in the CLI
+    Dataset class for the fruits and vegetables dataset.
     """
 
-    def __init__(self, data_path: Path, data_len: int = 50000):
+    def __init__(self, data_path: Path):
         print(f"Entered data path: {data_path}")
-        # self.data = torch.randn(data_len, 28*28)
-        # self.targets = torch.randint(0, 10, (data_len,))
 
         self.data_path = data_path
         self.image_paths = []
@@ -42,51 +39,34 @@ class PlaceHolderDataset(Dataset):
                         self.labels.append(self.class_to_idx["Rotten"])  # 1 for 'Rotten'
                     else:
                         raise ValueError(f"File {file} does not specify 'fresh' or 'rotten'.")
+        
+        # TODO: Load the images and labels into tensors once it is known what the model expects
 
     def __len__(self):
-        # return len(self.data)
         return len(self.image_paths)
 
     def __getitem__(self, idx):
-        # return self.data[idx], self.targets[idx]
         image_path = self.image_paths[idx]
         label = self.labels[idx]
         image = torchvision.io.read_image(image_path).float() / 255.0
 
         return image, label
 
-    def preprocess(self, output_folder: Path):
-        if not os.path.exists(output_folder):
-            os.makedirs(output_folder)
-        #torch.save(self.data, output_folder / "data.pt")
-        #torch.save(self.targets, output_folder / "targets.pt")
 
-
-def get_placeholder_dataloader(
-    data_len: int = 5000, batch_size: int = 32, image_size: int = 28 * 28, train_split: float = 0.8
+def get_fruits_and_vegetables_dataloaders(
+    batch_size: int = 32, train_split: float = 0.8
 ):
-    """Returns dataloaders for the placeholder dataset."""
-    data_path = Path("data/Fruits_Vegetables_Dataset(12000)")
+    """Returns dataloaders for the fruits and vegetables dataset."""
+    data_path = Path("data/fruits_vegetables_dataset")
 
-    # Define transforms for the dataset
-    transform = transforms.Compose(
-        [
-            transforms.Resize((image_size, image_size)),
-            transforms.ToTensor(),
-            transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5]),
-        ]
-    )
-
-    dataset = PlaceHolderDataset(data_path, data_len=data_len)
+    dataset = FruitsVegetablesDataset(data_path)
 
     dataset_len = len(dataset)
     train_size = int(train_split * dataset_len)
     test_size = dataset_len - train_size
 
+    # Split into train and test
     train_dataset, test_dataset = torch.utils.data.random_split(dataset, [train_size, test_size])
-
-    # train_dataset = PlaceHolderDataset(data_path, data_len=data_len)
-    # test_dataset = PlaceHolderDataset(data_path, data_len=int(data_len * 0.25))
 
     train_loader = DataLoader(
         train_dataset, batch_size=batch_size, shuffle=True, num_workers=4, persistent_workers=True
@@ -97,7 +77,7 @@ def get_placeholder_dataloader(
 
 
 if __name__ == "__main__":
-    train_loader, test_loader = get_placeholder_dataloader()
+    train_loader, test_loader = get_fruits_and_vegetables_dataloaders()
 
     train_dataset = train_loader.dataset
     test_dataset = test_loader.dataset
@@ -105,12 +85,12 @@ if __name__ == "__main__":
     # Print class-to-index mapping
     print("Class-to-index mapping:", train_dataset.dataset.class_to_idx)
 
-    # Print shapes of training and test datasets
-    print("Training dataset shape:", len(train_loader.dataset))
-    print("Test dataset shape:", len(test_loader.dataset))
+    # Print lengths of training and test datasets
+    print("Training dataset length:", len(train_loader.dataset))
+    print("Test dataset length:", len(test_loader.dataset))
 
-    # Printing shape of total dataset
-    print("Total dataset shape:", len(train_loader.dataset) + len(test_loader.dataset))
+    # Printing length of total dataset
+    print("Total dataset length:", len(train_loader.dataset) + len(test_loader.dataset))
 
     # Printing size of first image
     sample_image, sample_label = train_dataset[4]
