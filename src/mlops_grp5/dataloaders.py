@@ -3,9 +3,8 @@ from pathlib import Path
 
 import torch
 from torch.utils.data import DataLoader, Dataset
-import torchvision.io
-
-import matplotlib.pyplot as plt
+from torchvision import transforms
+from PIL import Image
 
 # Seed for reproducibility
 torch.manual_seed(0)
@@ -15,23 +14,40 @@ class FruitsVegetablesDataset(Dataset):
     Dataset class for the fruits and vegetables dataset.
     """
 
-    def __init__(self, data_path: Path):
+    def __init__(self, data_path: Path, preprocess: bool = True):
         print(f"Entered data path: {data_path}")
-
+        
         self.data_path = data_path
-        self.image_paths = []
+        self.save_data_path = self.data_path / "processed_data"
+        
+        # Check if data should be processed, if not, load the data
+        if preprocess:
+            self.pre_process()
+        else:
+            self.data = torch.load(data_path / "processed_data/data.pt")
+            self.labels = torch.load(data_path / "processed_data/labels.pt")
+
+    def __len__(self):
+        return len(self.data)
+
+    def __getitem__(self, idx: int):
+        return self.data[idx], self.labels[idx]
+    
+    def pre_process(self):
+        """Loads the images into tensors and performs transformations on them."""
         self.labels = []
+        image_paths = []
 
         # Define class-to-index mapping
         self.class_to_idx = {"Fresh": 0, "Rotten": 1}
         self.idx_to_class = {v: k for k, v in self.class_to_idx.items()}
 
         # Walk through the data directory and find all images
-        for root, _, files in os.walk(data_path):
+        for root, _, files in os.walk(self.data_path):
             for file in files:
                 if file.endswith((".jpg", ".jpeg", ".png", ".webp", ".gif")):  # Check for image files
                     file_path = os.path.join(root, file)
-                    self.image_paths.append(file_path)
+                    image_paths.append(file_path)
                     # Determine label based on filename
                     if "fresh" in file.lower():
                         self.labels.append(self.class_to_idx["Fresh"])  # 0 for 'Fresh'
@@ -39,18 +55,34 @@ class FruitsVegetablesDataset(Dataset):
                         self.labels.append(self.class_to_idx["Rotten"])  # 1 for 'Rotten'
                     else:
                         raise ValueError(f"File {file} does not specify 'fresh' or 'rotten'.")
+
+        # Load images and apply transformations
+
+        # Define image transformations
+        transform = transforms.Compose([
+            transforms.Resize(256),                 # Resize the image
+            transforms.CenterCrop(224),             # Crop to 224x224 pixels
+            transforms.ToTensor(),                  # Convert to a tensor
+            transforms.Normalize(                   # Normalize using ImageNet's mean and std
+                mean=[0.485, 0.456, 0.406],
+                std=[0.229, 0.224, 0.225]
+            )
+        ])
+
+        tensor_list = []
+        for path in image_paths:
+            image = Image.open(path).convert("RGB")  # Load image and ensure RGB mode
+            tensor = transform(image)  # Apply transformations
+            tensor_list.append(tensor)
         
-        # TODO: Load the images and labels into tensors once it is known what the model expects
+        # Stack tensors into a single tensor with shape [n_images, 3, height, width]
+        self.data = torch.stack(tensor_list)
 
-    def __len__(self):
-        return len(self.image_paths)
-
-    def __getitem__(self, idx):
-        image_path = self.image_paths[idx]
-        label = self.labels[idx]
-        image = torchvision.io.read_image(image_path).float() / 255.0
-
-        return image, label
+        # Save the processed data
+        if not os.path.exists(self.save_data_path):
+            os.makedirs(self.save_data_path, exist_ok=True)
+        torch.save(self.data, self.save_data_path / "data.pt")
+        torch.save(self.labels, self.save_data_path / "labels.pt")
 
 
 def get_fruits_and_vegetables_dataloaders(
