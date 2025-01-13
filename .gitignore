@@ -177,4 +177,4 @@ cython_debug/
 #.idea/
 
 # Datasets
-data/
+data/fruits_vegetables_dataset
