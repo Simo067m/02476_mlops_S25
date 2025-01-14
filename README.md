@@ -42,8 +42,28 @@ The directory structure of the project looks like this:
 │       └── tests.yaml
 ├── configs/                  # Configuration files
 ├── data/                     # Data directory
-│   ├── processed
-│   └── raw
+│   └── Fruit_Vegetables_Dataset(12000)/
+│       ├── Fruits/
+│       │   ├── FreshApple/
+│       │   ├── FreshBanana/
+│       │   ├── FreshMango/
+│       │   ├── FreshOrange/
+│       │   ├── FreshStrawberry/
+│       │   ├── RottenApple/
+│       │   ├── RottenBanana/
+│       │   ├── RottenMango/
+│       │   ├── RottenOrange/
+│       │   ├── RottenStrawberry/
+│       └── Vegetables/
+│           ├── FreshBellpepper/
+│           ├── FreshCarrot/
+│           ├── FreshCucumber/
+│           ├── FreshPotato/
+│           ├── RottenBellpepper/
+│           ├── RottenCarrot/
+│           ├── RottenCucumber/
+│           ├── RottenPotato/
+│           ├── RottenTomato/
 ├── dockerfiles/              # Dockerfiles
 │   ├── api.Dockerfile
 │   └── train.Dockerfile

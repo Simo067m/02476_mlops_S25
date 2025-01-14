@@ -2,42 +2,110 @@ import pytorch_lightning as pl
 import torch
 import torch.nn as nn
 
+import timm
+from dataloaders import get_fruits_and_vegetables_dataloaders
 
-class PlaceHolderModel(pl.LightningModule):
-    """
-    Placeholder model class for setting up the training pipeline
-    """
+def get_model(model_name: str, num_classes: int) -> nn.Module:
+    """Gets a pretrained image model from the timm library."""
+    model = timm.create_model(model_name, pretrained=True, num_classes=num_classes)
+    return model
 
-    def __init__(self) -> None:
+class ImageModel(pl.LightningModule):
+    """
+    Defines an image model for PyTorch Lightning.
+    Inherits from pl.LightningModule to leverage its functionality.
+    """
+    def __init__(self, learning_rate: float, weight_decay: float,
+                 model_name: str = "test_efficientnet.r160_in1k") -> None:
         super().__init__()
-        self.fc = nn.Linear(28*28, 10)
+        # Load pretrained model
+        print(f"Initializing model {model_name}...")
+        self.model = get_model(model_name, num_classes=2)
 
-        self.criterion = nn.CrossEntropyLoss()
+        # Define hyperparameters
+        self.learning_rate = learning_rate
+        self.weight_decay = weight_decay
+
+        # Define loss function
+        self.loss_fn = nn.CrossEntropyLoss()
+
+        # Initialize loss and accuracy metrics
+        self.train_epoch_loss = 0.0
+        self.val_epoch_loss = 0.0
+        self.test_epoch_loss = 0.0
+        self.test_epoch_acc = 0.0
+
+        self.train_losses = []
+        self.val_losses = []
+        self.test_losses = []
+        self.test_accs = []
+
+        print("Model initialized.")
     
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        x = self.fc(x)
-        return x
+        """Forward pass of the model."""
+        return self.model(x)
     
-    def training_step(self, batch):
-        data, target = batch
-        output = self(data)
-        loss = self.criterion(output, target)
+    def training_step(self, batch: torch.Tensor, batch_idx: int) -> torch.Tensor:
+        """Training step for PyTorch Lightning."""
+        images, targets = batch
+        pred = self(images)
+        loss = self.loss_fn(pred, targets)
+        self.train_epoch_loss = loss.item()
+        self.train_losses.append(loss.item())
         return loss
     
-    def test_step(self, batch):
-        data, target = batch
-        output = self(data)
-        loss = self.criterion(output, target)
+    def validation_step(self, batch: torch.Tensor, batch_idx: int) -> torch.Tensor:
+        """Validation step for PyTorch Lightning."""
+        images, targets = batch
+        pred = self(images)
+        loss = self.loss_fn(pred, targets)
+        self.val_epoch_loss = loss.item()
+        self.val_losses.append(loss.item())
         return loss
     
-    def configure_optimizers(self):
-        return torch.optim.Adam(self.parameters(), lr=0.001)
+    def test_step(self, batch: torch.Tensor, batch_idx: int) -> torch.Tensor:
+        """Test step for PyTorch Lightning."""
+        images, targets = batch
+        pred = self(images)
+        loss = self.loss_fn(pred, targets)
+        acc = (pred.argmax(dim=1) == targets).float().mean()
+        self.test_epoch_loss = loss.item()
+        self.test_epoch_acc = acc.item()
+        self.test_losses.append(loss.item())
+        self.test_accs.append(acc.item())
+        return loss
+    
+    def configure_optimizers(self) -> torch.optim.Optimizer:
+        """Configures the optimizer for training."""
+        optimizer = torch.optim.Adam(self.parameters(), lr=self.learning_rate, weight_decay=self.weight_decay)
+        return optimizer
+    
+    def on_train_epoch_start(self):
+        self.train_epoch_loss = 0.0
+        self.val_epoch_loss = 0.0
+        self.test_epoch_loss = 0.0
+    
+    def on_train_epoch_end(self):
+        print(f"Epoch {self.current_epoch + 1} Training Loss: {self.train_epoch_loss:.4f}")
+    
+    def on_validation_epoch_end(self):
+        print(f"Epoch {self.current_epoch + 1} Validation Loss: {self.val_epoch_loss:.4f}")
+    
+    def on_test_epoch_end(self):
+        print(f"Test Loss: {self.test_epoch_loss:.4f} Test Accuracy: {self.test_epoch_acc:.4f}")
 
 if __name__ == "__main__":
-    model = PlaceHolderModel()
-    print(f"Model architecture: {model}")
-    print(f"Number of parameters: {sum(p.numel() for p in model.parameters())}")
+    # Initialize model
+    model_name = "test_efficientnet.r160_in1k"
+    model = ImageModel(learning_rate=1e-3, weight_decay=1e-5, model_name=model_name)
 
-    dummy_input = torch.randn(1, 28*28)
-    output = model(dummy_input)
-    print(f"Output shape: {output.shape}")
+    # Load data
+    _, test_loader, _ = get_fruits_and_vegetables_dataloaders()
+
+    # Perform forward pass
+    outputs = model(test_loader.dataset[0][0].unsqueeze(0))
+
+    # Print model outputs
+    print(outputs)
+    print(outputs.shape)
