@@ -15,18 +15,25 @@ class FruitsVegetablesDataset(Dataset):
     Dataset class for the fruits and vegetables dataset.
     """
 
-    def __init__(self, data_path: Path, preprocess: bool = True):
-        print(f"Entered data path: {data_path}")
+    def __init__(self, data_path: Path):
+        print(f"Data path: {data_path}")
         
         self.data_path = data_path
         self.save_data_path = self.data_path / "processed_data"
         
+        # Define class-to-index mapping
+        self.class_to_idx = {"Fresh": 0, "Rotten": 1}
+        self.idx_to_class = {v: k for k, v in self.class_to_idx.items()}
+
         # Check if data should be processed, if not, load the data
-        if preprocess:
+        if not os.path.exists(self.save_data_path):
             self.pre_process()
         else:
-            self.data = torch.load(data_path / "processed_data/data.pt")
-            self.labels = torch.load(data_path / "processed_data/labels.pt")
+            print("Loading pre-processed data...")
+            self.data = torch.load(self.save_data_path / "data.pt", weights_only=True)
+            self.labels = torch.load(self.save_data_path / "labels.pt", weights_only=True)
+        
+        print("Data loaded.")
 
     def __len__(self):
         return len(self.data)
@@ -36,12 +43,9 @@ class FruitsVegetablesDataset(Dataset):
     
     def pre_process(self):
         """Loads the images into tensors and performs transformations on them."""
+        print("Pre-processing data...")
         self.labels = []
         image_paths = []
-
-        # Define class-to-index mapping
-        self.class_to_idx = {"Fresh": 0, "Rotten": 1}
-        self.idx_to_class = {v: k for k, v in self.class_to_idx.items()}
 
         # Walk through the data directory and find all images
         for root, _, files in os.walk(self.data_path):
@@ -84,10 +88,11 @@ class FruitsVegetablesDataset(Dataset):
             os.makedirs(self.save_data_path, exist_ok=True)
         torch.save(self.data, self.save_data_path / "data.pt")
         torch.save(self.labels, self.save_data_path / "labels.pt")
+        print("Data pre-processing complete.")
 
 
 def get_fruits_and_vegetables_dataloaders(
-    batch_size: int = 32, train_split: float = 0.6
+    batch_size: int = 32, train_split: float = 0.6, test_split: float = 0.2
 ):
     """Returns dataloaders for the fruits and vegetables dataset."""
     data_path = Path("data/fruits_vegetables_dataset")
@@ -96,7 +101,7 @@ def get_fruits_and_vegetables_dataloaders(
 
     dataset_len = len(dataset)
     train_size = int(train_split * dataset_len)
-    test_size = dataset_len - train_size // 2
+    test_size = int(test_split * dataset_len)
     val_size = dataset_len - train_size - test_size
 
     # Split into train and test
@@ -111,6 +116,7 @@ def get_fruits_and_vegetables_dataloaders(
     return train_loader, test_loader, val_loader
 
 def download_fruits_and_vegetables_dataset():
+    """Downloads the fruits and vegetables dataset using KaggleHub."""
     # Download latest version
     path = kagglehub.dataset_download("muhriddinmuxiddinov/fruits-and-vegetables-dataset")
 
@@ -118,10 +124,11 @@ def download_fruits_and_vegetables_dataset():
 
 
 if __name__ == "__main__":
-    train_loader, test_loader = get_fruits_and_vegetables_dataloaders()
+    train_loader, test_loader, val_loader = get_fruits_and_vegetables_dataloaders()
 
     train_dataset = train_loader.dataset
     test_dataset = test_loader.dataset
+    val_dataset = val_loader.dataset
 
     # Print class-to-index mapping
     print("Class-to-index mapping:", train_dataset.dataset.class_to_idx)
@@ -129,9 +136,10 @@ if __name__ == "__main__":
     # Print lengths of training and test datasets
     print("Training dataset length:", len(train_loader.dataset))
     print("Test dataset length:", len(test_loader.dataset))
+    print("Validation dataset length:", len(val_loader.dataset))
 
     # Printing length of total dataset
-    print("Total dataset length:", len(train_loader.dataset) + len(test_loader.dataset))
+    print("Total dataset length:", len(train_dataset) + len(test_dataset), + len(val_dataset))
 
     # Printing size of first image
     sample_image, sample_label = train_dataset[4]
