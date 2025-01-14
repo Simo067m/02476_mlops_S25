@@ -5,6 +5,7 @@ import torch
 from torch.utils.data import DataLoader, Dataset
 from torchvision import transforms
 from PIL import Image
+import kagglehub
 
 # Seed for reproducibility
 torch.manual_seed(0)
@@ -86,7 +87,7 @@ class FruitsVegetablesDataset(Dataset):
 
 
 def get_fruits_and_vegetables_dataloaders(
-    batch_size: int = 32, train_split: float = 0.8
+    batch_size: int = 32, train_split: float = 0.6
 ):
     """Returns dataloaders for the fruits and vegetables dataset."""
     data_path = Path("data/fruits_vegetables_dataset")
@@ -95,17 +96,25 @@ def get_fruits_and_vegetables_dataloaders(
 
     dataset_len = len(dataset)
     train_size = int(train_split * dataset_len)
-    test_size = dataset_len - train_size
+    test_size = dataset_len - train_size // 2
+    val_size = dataset_len - train_size - test_size
 
     # Split into train and test
-    train_dataset, test_dataset = torch.utils.data.random_split(dataset, [train_size, test_size])
+    train_dataset, test_dataset, val_dataset = torch.utils.data.random_split(dataset, [train_size, test_size, val_size])
 
     train_loader = DataLoader(
         train_dataset, batch_size=batch_size, shuffle=True, num_workers=4, persistent_workers=True
     )
     test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False, num_workers=4, persistent_workers=True)
+    val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False, num_workers=4, persistent_workers=True)
 
-    return train_loader, test_loader
+    return train_loader, test_loader, val_loader
+
+def download_fruits_and_vegetables_dataset():
+    # Download latest version
+    path = kagglehub.dataset_download("muhriddinmuxiddinov/fruits-and-vegetables-dataset")
+
+    print("Path to dataset files:", path)
 
 
 if __name__ == "__main__":
