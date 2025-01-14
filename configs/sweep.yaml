@@ -5,7 +5,7 @@ project: mlops-grp5
 method: grid
 metric:
     goal: minimize
-    name: validation_loss
+    name: val_loss
 parameters:
     learning-rate:
         values: [0.001, 0.01, 0.1]
