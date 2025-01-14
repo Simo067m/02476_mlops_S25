@@ -13,14 +13,13 @@ DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 if __name__ == "__main__":
     print(f"Training on device:", DEVICE)
-
+    torch.cuda.empty_cache()
     # Define the model
     model = ImageModel(learning_rate=1e-3, weight_decay=1e-5).to(DEVICE)
-    #wandb.init(project="mlops-grp5", 
-    #        config={"learning_rate": 1e-3, "weight_decay": 1e-5, "batch_size": 32})
-
+    checkpoint_callback = pl.callbacks.ModelCheckpoint(monitor='val_loss', mode='min')
+    early_stop_callback = pl.callbacks.EarlyStopping(monitor='val_loss', patience=3, verbose=True, mode='min')
     # Define the trainer
-    trainer = Trainer(max_epochs=10, accelerator=DEVICE, devices=1, logger=pl.loggers.WandbLogger(project='mlops-grp5',config={"learning_rate": 1e-3, "weight_decay": 1e-5}), enable_checkpointing=False)
+    trainer = Trainer(max_epochs=10, accelerator=DEVICE, devices=1, logger=pl.loggers.WandbLogger(project='mlops-grp5',config={"learning_rate": 1e-3, "weight_decay": 1e-5}, log_model=True), callbacks=[checkpoint_callback, early_stop_callback])
 
     # Load data
     train_loader, test_loader, val_loader = get_fruits_and_vegetables_dataloaders()
@@ -41,3 +40,4 @@ if __name__ == "__main__":
         os.makedirs("reports/figures")
     plot_placeholder_loss()
     print("Loss plot saved.")
+    wandb.finish()

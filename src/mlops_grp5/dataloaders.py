@@ -108,10 +108,10 @@ def get_fruits_and_vegetables_dataloaders(
     train_dataset, test_dataset, val_dataset = torch.utils.data.random_split(dataset, [train_size, test_size, val_size])
 
     train_loader = DataLoader(
-        train_dataset, batch_size=batch_size, shuffle=True, num_workers=4, persistent_workers=True
-    )
-    test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False, num_workers=4, persistent_workers=True)
-    val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False, num_workers=4, persistent_workers=True)
+        train_dataset, batch_size=batch_size, shuffle=True, num_workers=0)#, persistent_workers=True
+    #)
+    test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False, num_workers=0)#, persistent_workers=True)
+    val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False, num_workers=0)#, persistent_workers=True)
 
     return train_loader, test_loader, val_loader
 
