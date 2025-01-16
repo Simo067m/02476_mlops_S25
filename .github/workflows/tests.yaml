@@ -32,12 +32,8 @@ jobs:
           python -m pip install -U pip setuptools wheel
           pip install -r requirements.txt -r requirements_test.txt
           pip list
-      
-      - name: Clean Temporary Files
-        run: sudo rm -rf /private/var/folders/ml/
-
 
       - name: Run tests & coverage
         run: |
-          coverage run -m pytest --disable-warnings tests/
+          coverage run --rcfile=.coveragerc -m pytest --disable-warnings tests/
           coverage report -m
