@@ -1,11 +1,11 @@
 import os
 from pathlib import Path
 
+import kagglehub
 import torch
+from PIL import Image
 from torch.utils.data import DataLoader, Dataset
 from torchvision import transforms
-from PIL import Image
-import kagglehub
 
 # Seed for reproducibility
 torch.manual_seed(0)

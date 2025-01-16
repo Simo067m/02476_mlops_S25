@@ -1,13 +1,15 @@
-import torch
 import os
+
+import pytorch_lightning as pl
+import torch
+import typer
+from dataloaders import get_fruits_and_vegetables_dataloaders
 from model import ImageModel
 from pytorch_lightning import Trainer
-from visualize import plot_loss, plot_accuracy
-import wandb
-import pytorch_lightning as pl
-import typer
+from visualize import plot_accuracy, plot_loss
 
-from dataloaders import get_fruits_and_vegetables_dataloaders
+import wandb
+
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 def train_model(batch_size: int = 32, learning_rate: float = 1e-3, weight_decay: float = 1e-5, max_epochs: int = 10):

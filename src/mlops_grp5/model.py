@@ -1,9 +1,9 @@
 import pytorch_lightning as pl
+import timm
 import torch
 import torch.nn as nn
+from .dataloaders import get_fruits_and_vegetables_dataloaders
 
-import timm
-from dataloaders import get_fruits_and_vegetables_dataloaders
 
 def get_model(model_name: str, num_classes: int) -> nn.Module:
     """Gets a pretrained image model from the timm library."""
