@@ -34,7 +34,7 @@ jobs:
           pip list
       
       - name: Clean Temporary Files
-        run: rm -rf /private/var/folders/ml/
+        run: sudo rm -rf /private/var/folders/ml/
 
 
       - name: Run tests & coverage
