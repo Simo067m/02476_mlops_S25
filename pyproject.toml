@@ -34,3 +34,8 @@ ignore_missing_imports = true
 
 [tool.coverage.run]
 omit = ["tests/*"]
+
+[tool.pytest.ini_options]
+filterwarnings = [
+    "ignore:No source for code"
+]
