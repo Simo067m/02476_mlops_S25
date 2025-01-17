@@ -1,3 +1,5 @@
 [run]
 omit =
     /private/var/folders/*
+    /tmp/*
+    */_remote_module_non_scriptable.py
