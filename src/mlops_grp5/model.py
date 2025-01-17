@@ -2,7 +2,9 @@ import pytorch_lightning as pl
 import timm
 import torch
 import torch.nn as nn
-from .dataloaders import get_fruits_and_vegetables_dataloaders
+from dataloaders import get_fruits_and_vegetables_dataloaders
+
+from logger import log
 
 
 def get_model(model_name: str, num_classes: int) -> nn.Module:
@@ -19,7 +21,7 @@ class ImageModel(pl.LightningModule):
                  model_name: str = "test_efficientnet.r160_in1k") -> None:
         super().__init__()
         # Load pretrained model
-        print(f"Initializing model {model_name}...")
+        log.info(f"Initializing model {model_name}...")
         self.model = get_model(model_name, num_classes=2)
 
         # Define hyperparameters
@@ -40,7 +42,7 @@ class ImageModel(pl.LightningModule):
         self.test_losses = []
         self.test_accs = []
 
-        print("Model initialized.")
+        log.info("Model initialized.")
     
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """Forward pass of the model."""
@@ -55,7 +57,9 @@ class ImageModel(pl.LightningModule):
         self.train_epoch_loss = loss.item()
         self.train_losses.append(loss.item())
         self.log("train_loss", loss)
+        log.info(f"training loss: {loss}")
         self.log("train_acc", acc)
+        log.info(f"training accuracy: {acc}")
         return loss
     
     def validation_step(self, batch: torch.Tensor, batch_idx: int) -> torch.Tensor:
@@ -66,7 +70,9 @@ class ImageModel(pl.LightningModule):
         self.val_epoch_loss = loss.item()
         self.val_losses.append(loss.item())
         self.log("val_loss", loss)
+        log.info(f"Validation loss: {loss}")
         self.log("val_acc", (pred.argmax(dim=-1) == targets).float().mean())
+        log.info(f"Validation accuracy: {(pred.argmax(dim=-1) == targets).float().mean()}")
         return loss
     
     def test_step(self, batch: torch.Tensor, batch_idx: int) -> torch.Tensor:
@@ -80,7 +86,9 @@ class ImageModel(pl.LightningModule):
         self.test_losses.append(loss.item())
         self.test_accs.append(acc.item())
         self.log("test_loss", loss)
+        log.info(f"Test loss: {loss}")
         self.log("test_acc", acc)
+        log.info(f"Test accuracy: {acc}")
         return loss
     
     def configure_optimizers(self) -> torch.optim.Optimizer:
@@ -95,12 +103,15 @@ class ImageModel(pl.LightningModule):
     
     def on_train_epoch_end(self):
         print(f"Epoch {self.current_epoch + 1} Training Loss: {self.train_epoch_loss:.4f}")
+        log.info(f"Epoch {self.current_epoch + 1} Training Loss: {self.train_epoch_loss:.4f}")
     
     def on_validation_epoch_end(self):
         print(f"Epoch {self.current_epoch + 1} Validation Loss: {self.val_epoch_loss:.4f}")
+        log.info(f"Epoch {self.current_epoch + 1} Validation Loss: {self.val_epoch_loss:.4f}")
     
     def on_test_epoch_end(self):
         print(f"Test Loss: {self.test_epoch_loss:.4f} Test Accuracy: {self.test_epoch_acc:.4f}")
+        log.info(f"Test Loss: {self.test_epoch_loss:.4f} Test Accuracy: {self.test_epoch_acc:.4f}")
 
 if __name__ == "__main__":
     # Initialize model

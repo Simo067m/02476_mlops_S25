@@ -10,12 +10,14 @@ from visualize import plot_accuracy, plot_loss
 
 import wandb
 
+from logger import log
+
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 def train_model(batch_size: int = 32, learning_rate: float = 1e-3, weight_decay: float = 1e-5, max_epochs: int = 10):
-    print(f"Training on device:", DEVICE)
+    log.info(f"Training on device: {DEVICE}")
     torch.cuda.empty_cache()
-    print('Training model with batch size:', batch_size, 'learning rate:', learning_rate, 'and weight decay:', weight_decay)
+    log.info(('Training model with batch size:', batch_size, 'learning rate:', learning_rate, 'and weight decay:', weight_decay))
     #wait for input in terminal
     # Define the model
     model = ImageModel(learning_rate=learning_rate, weight_decay=weight_decay).to(DEVICE)
@@ -30,13 +32,13 @@ def train_model(batch_size: int = 32, learning_rate: float = 1e-3, weight_decay:
     # Train and test the model
     trainer.fit(model, train_loader, val_loader)
     trainer.test(model, test_loader)
-    print("Training and testing complete.")
+    log.info("Training and testing complete.")
     
     # Save the model
     if not os.path.exists("models"):
         os.makedirs("models")
     torch.save(model.state_dict(), "models/model.pth")
-    print("Model saved.")
+    log.info("Model saved.")
 
     # Save the loss plot
     plot_path = "reports/figures"
@@ -44,7 +46,7 @@ def train_model(batch_size: int = 32, learning_rate: float = 1e-3, weight_decay:
         os.makedirs(plot_path)
     plot_loss(model.train_losses, model.val_losses, model.test_losses, plot_path)
     plot_accuracy(model.test_accs, plot_path)
-    print("Visualizations saved.")
+    log.info("Visualizations saved.")
     wandb.finish()
 
 if __name__ == "__main__":

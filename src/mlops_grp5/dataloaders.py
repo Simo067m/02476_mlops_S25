@@ -7,6 +7,8 @@ from PIL import Image
 from torch.utils.data import DataLoader, Dataset
 from torchvision import transforms
 
+from logger import log
+
 # Seed for reproducibility
 torch.manual_seed(0)
 
@@ -16,7 +18,7 @@ class FruitsVegetablesDataset(Dataset):
     """
 
     def __init__(self, data_path: Path):
-        print(f"Data path: {data_path}")
+        log.info(f"Data path: {data_path}")
         
         self.data_path = data_path
         self.save_data_path = self.data_path / "processed_data"
@@ -29,11 +31,11 @@ class FruitsVegetablesDataset(Dataset):
         if not os.path.exists(self.save_data_path):
             self.pre_process()
         else:
-            print("Loading pre-processed data...")
+            log.info("Loading pre-processed data...")
             self.data = torch.load(self.save_data_path / "data.pt", weights_only=True)
             self.labels = torch.load(self.save_data_path / "labels.pt", weights_only=True)
         
-        print("Data loaded.")
+        log.info("Data loaded.")
 
     def __len__(self):
         return len(self.data)
@@ -43,7 +45,7 @@ class FruitsVegetablesDataset(Dataset):
     
     def pre_process(self):
         """Loads the images into tensors and performs transformations on them."""
-        print("Pre-processing data...")
+        log.warning("Pre-processing data...")
         self.labels = []
         image_paths = []
 
@@ -88,7 +90,7 @@ class FruitsVegetablesDataset(Dataset):
             os.makedirs(self.save_data_path, exist_ok=True)
         torch.save(self.data, self.save_data_path / "data.pt")
         torch.save(self.labels, self.save_data_path / "labels.pt")
-        print("Data pre-processing complete.")
+        log.info("Data pre-processing complete.")
 
 
 def get_fruits_and_vegetables_dataloaders(
@@ -115,10 +117,11 @@ def get_fruits_and_vegetables_dataloaders(
 
 def download_fruits_and_vegetables_dataset():
     """Downloads the fruits and vegetables dataset using KaggleHub."""
+    log.warning("Downloading fruits and vegetables dataset...")
     # Download latest version
     path = kagglehub.dataset_download("muhriddinmuxiddinov/fruits-and-vegetables-dataset")
 
-    print("Path to dataset files:", path)
+    log.info("Path to dataset files:", path)
 
 
 if __name__ == "__main__":

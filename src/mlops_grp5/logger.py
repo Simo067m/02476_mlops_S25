@@ -2,9 +2,11 @@ from loguru import logger
 import sys
 
 logger.remove()
-logger.add(sys.stdout, level="WARNING")
+logger.add(sys.stdout, level="DEBUG")
 logger.add("logs/debug.log", level="DEBUG", rotation="10 MB")
 logger.add("logs/warning.log", level="WARNING", rotation="10 MB")
+
+log = logger
 
 if __name__ == "__main__":
     logger.debug("This is a debug message")
