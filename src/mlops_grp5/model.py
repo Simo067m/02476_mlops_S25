@@ -1,9 +1,9 @@
 import pytorch_lightning as pl
+import timm
 import torch
 import torch.nn as nn
+from .dataloaders import get_fruits_and_vegetables_dataloaders
 
-import timm
-from dataloaders import get_fruits_and_vegetables_dataloaders
 
 def get_model(model_name: str, num_classes: int) -> nn.Module:
     """Gets a pretrained image model from the timm library."""
@@ -51,8 +51,11 @@ class ImageModel(pl.LightningModule):
         images, targets = batch
         pred = self(images)
         loss = self.loss_fn(pred, targets)
+        acc = (pred.argmax(dim=-1) == targets).float().mean()
         self.train_epoch_loss = loss.item()
         self.train_losses.append(loss.item())
+        self.log("train_loss", loss)
+        self.log("train_acc", acc)
         return loss
     
     def validation_step(self, batch: torch.Tensor, batch_idx: int) -> torch.Tensor:
@@ -62,6 +65,8 @@ class ImageModel(pl.LightningModule):
         loss = self.loss_fn(pred, targets)
         self.val_epoch_loss = loss.item()
         self.val_losses.append(loss.item())
+        self.log("val_loss", loss)
+        self.log("val_acc", (pred.argmax(dim=-1) == targets).float().mean())
         return loss
     
     def test_step(self, batch: torch.Tensor, batch_idx: int) -> torch.Tensor:
@@ -74,6 +79,8 @@ class ImageModel(pl.LightningModule):
         self.test_epoch_acc = acc.item()
         self.test_losses.append(loss.item())
         self.test_accs.append(acc.item())
+        self.log("test_loss", loss)
+        self.log("test_acc", acc)
         return loss
     
     def configure_optimizers(self) -> torch.optim.Optimizer:
