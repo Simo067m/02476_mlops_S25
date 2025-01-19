@@ -177,7 +177,7 @@ cython_debug/
 #.idea/
 
 # Datasets
-data/fruits_vegetables_dataset
+data/
 
 # Wandb
 wandb/

@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+import shutil
 
 import kagglehub
 import torch
@@ -99,6 +100,7 @@ def get_fruits_and_vegetables_dataloaders(
     config = hydra.compose(config_name="data/data_config.yaml")
     log.info(f"Using data config: {config}")
     """Returns dataloaders for the fruits and vegetables dataset."""
+    # Download the dataset if it doesn't exist
     if not os.path.exists("data/fruits_vegetables_dataset"):
         data_path = download_fruits_and_vegetables_dataset()
     else:
@@ -126,12 +128,18 @@ def download_fruits_and_vegetables_dataset() -> str:
     # Download latest version
     path = kagglehub.dataset_download("muhriddinmuxiddinov/fruits-and-vegetables-dataset")
 
-    log.warning("Dataset downloaded. Path to dataset files:", path)
+    # Move the downloaded dataset to your custom location
+    custom_path = 'data/fruits_vegetables_dataset'
+    dataset_name = 'Fruits_Vegetables_Dataset(12000)'
+    # Assuming the dataset is a zip file, move it
+    shutil.move(os.path.join(path, dataset_name), custom_path)
+    log.warning(f"Dataset downloaded. Path to dataset files: {custom_path}")
 
-    return path
+    return Path(custom_path)
 
 
 if __name__ == "__main__":
+    hydra.initialize(config_path=os.path.join("..", "..", "configs"))
     train_loader, test_loader, val_loader = get_fruits_and_vegetables_dataloaders()
 
     train_dataset = train_loader.dataset
@@ -147,7 +155,7 @@ if __name__ == "__main__":
     print("Validation dataset length:", len(val_loader.dataset))
 
     # Printing length of total dataset
-    print("Total dataset length:", len(train_dataset) + len(test_dataset), + len(val_dataset))
+    print("Total dataset length:", len(train_dataset) + len(test_dataset) + len(val_dataset))
 
     # Printing size of first image
     sample_image, sample_label = train_dataset[4]
