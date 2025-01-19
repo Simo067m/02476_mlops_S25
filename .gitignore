@@ -184,3 +184,6 @@ wandb/
 
 # pytorch lightning logs
 mlops-grp5/
+
+# .Hydra configurations
+.hydra/

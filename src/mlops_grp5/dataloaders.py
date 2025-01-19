@@ -8,6 +8,7 @@ from torch.utils.data import DataLoader, Dataset
 from torchvision import transforms
 
 from logger import log
+import hydra
 
 # Seed for reproducibility
 torch.manual_seed(0)
@@ -92,18 +93,22 @@ class FruitsVegetablesDataset(Dataset):
         torch.save(self.labels, self.save_data_path / "labels.pt")
         log.info("Data pre-processing complete.")
 
-
 def get_fruits_and_vegetables_dataloaders(
     batch_size: int = 32, train_split: float = 0.6, test_split: float = 0.2
 ):
+    config = hydra.compose(config_name="data/data_config.yaml")
+    log.info(f"Using data config: {config}")
     """Returns dataloaders for the fruits and vegetables dataset."""
-    data_path = Path("data/fruits_vegetables_dataset")
+    if not os.path.exists("data/fruits_vegetables_dataset"):
+        data_path = download_fruits_and_vegetables_dataset()
+    else:
+        data_path = Path("data/fruits_vegetables_dataset")
 
     dataset = FruitsVegetablesDataset(data_path)
 
     dataset_len = len(dataset)
-    train_size = int(train_split * dataset_len)
-    test_size = int(test_split * dataset_len)
+    train_size = int(config.data.train_test_split.train_split * dataset_len)
+    test_size = int(config.data.train_test_split.test_split * dataset_len)
     val_size = dataset_len - train_size - test_size
 
     # Split into train and test
@@ -115,13 +120,15 @@ def get_fruits_and_vegetables_dataloaders(
 
     return train_loader, test_loader, val_loader
 
-def download_fruits_and_vegetables_dataset():
+def download_fruits_and_vegetables_dataset() -> str:
     """Downloads the fruits and vegetables dataset using KaggleHub."""
-    log.warning("Downloading fruits and vegetables dataset...")
+    log.warning("Downloading fruits and vegetables dataset... This might take a while.")
     # Download latest version
     path = kagglehub.dataset_download("muhriddinmuxiddinov/fruits-and-vegetables-dataset")
 
-    log.info("Path to dataset files:", path)
+    log.warning("Dataset downloaded. Path to dataset files:", path)
+
+    return path
 
 
 if __name__ == "__main__":
