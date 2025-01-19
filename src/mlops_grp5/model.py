@@ -57,9 +57,7 @@ class ImageModel(pl.LightningModule):
         self.train_epoch_loss = loss.item()
         self.train_losses.append(loss.item())
         self.log("train_loss", loss)
-        log.info(f"training loss: {loss}")
         self.log("train_acc", acc)
-        log.info(f"training accuracy: {acc}")
         return loss
     
     def validation_step(self, batch: torch.Tensor, batch_idx: int) -> torch.Tensor:
@@ -70,9 +68,7 @@ class ImageModel(pl.LightningModule):
         self.val_epoch_loss = loss.item()
         self.val_losses.append(loss.item())
         self.log("val_loss", loss)
-        log.info(f"Validation loss: {loss}")
         self.log("val_acc", (pred.argmax(dim=-1) == targets).float().mean())
-        log.info(f"Validation accuracy: {(pred.argmax(dim=-1) == targets).float().mean()}")
         return loss
     
     def test_step(self, batch: torch.Tensor, batch_idx: int) -> torch.Tensor:
@@ -86,9 +82,7 @@ class ImageModel(pl.LightningModule):
         self.test_losses.append(loss.item())
         self.test_accs.append(acc.item())
         self.log("test_loss", loss)
-        log.info(f"Test loss: {loss}")
         self.log("test_acc", acc)
-        log.info(f"Test accuracy: {acc}")
         return loss
     
     def configure_optimizers(self) -> torch.optim.Optimizer:
