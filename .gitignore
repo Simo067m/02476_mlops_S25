@@ -177,10 +177,13 @@ cython_debug/
 #.idea/
 
 # Datasets
-data/fruits_vegetables_dataset
+data/
 
 # Wandb
 wandb/
 
 # pytorch lightning logs
 mlops-grp5/
+
+# .Hydra configurations
+.hydra/

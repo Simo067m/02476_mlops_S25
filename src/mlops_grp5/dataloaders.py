@@ -1,11 +1,15 @@
 import os
 from pathlib import Path
+import shutil
 
 import kagglehub
 import torch
 from PIL import Image
 from torch.utils.data import DataLoader, Dataset
 from torchvision import transforms
+
+from mlops_grp5.logger import log
+import hydra
 
 # Seed for reproducibility
 torch.manual_seed(0)
@@ -16,7 +20,7 @@ class FruitsVegetablesDataset(Dataset):
     """
 
     def __init__(self, data_path: Path):
-        print(f"Data path: {data_path}")
+        log.info(f"Data path: {data_path}")
         
         self.data_path = data_path
         self.save_data_path = self.data_path / "processed_data"
@@ -29,11 +33,11 @@ class FruitsVegetablesDataset(Dataset):
         if not os.path.exists(self.save_data_path):
             self.pre_process()
         else:
-            print("Loading pre-processed data...")
+            log.info("Loading pre-processed data...")
             self.data = torch.load(self.save_data_path / "data.pt", weights_only=True)
             self.labels = torch.load(self.save_data_path / "labels.pt", weights_only=True)
         
-        print("Data loaded.")
+        log.info("Data loaded.")
 
     def __len__(self):
         return len(self.data)
@@ -43,7 +47,7 @@ class FruitsVegetablesDataset(Dataset):
     
     def pre_process(self):
         """Loads the images into tensors and performs transformations on them."""
-        print("Pre-processing data...")
+        log.warning("Pre-processing data...")
         self.labels = []
         image_paths = []
 
@@ -88,20 +92,25 @@ class FruitsVegetablesDataset(Dataset):
             os.makedirs(self.save_data_path, exist_ok=True)
         torch.save(self.data, self.save_data_path / "data.pt")
         torch.save(self.labels, self.save_data_path / "labels.pt")
-        print("Data pre-processing complete.")
-
+        log.info("Data pre-processing complete.")
 
 def get_fruits_and_vegetables_dataloaders(
     batch_size: int = 32, train_split: float = 0.6, test_split: float = 0.2
 ):
+    config = hydra.compose(config_name="data/data_config.yaml")
+    log.info(f"Using data config: {config}")
     """Returns dataloaders for the fruits and vegetables dataset."""
-    data_path = Path("data/fruits_vegetables_dataset")
+    # Download the dataset if it doesn't exist
+    if not os.path.exists("data/fruits_vegetables_dataset"):
+        data_path = download_fruits_and_vegetables_dataset()
+    else:
+        data_path = Path("data/fruits_vegetables_dataset")
 
     dataset = FruitsVegetablesDataset(data_path)
 
     dataset_len = len(dataset)
-    train_size = int(train_split * dataset_len)
-    test_size = int(test_split * dataset_len)
+    train_size = int(config.data.train_test_split.train_split * dataset_len)
+    test_size = int(config.data.train_test_split.test_split * dataset_len)
     val_size = dataset_len - train_size - test_size
 
     # Split into train and test
@@ -113,15 +122,24 @@ def get_fruits_and_vegetables_dataloaders(
 
     return train_loader, test_loader, val_loader
 
-def download_fruits_and_vegetables_dataset():
+def download_fruits_and_vegetables_dataset() -> str:
     """Downloads the fruits and vegetables dataset using KaggleHub."""
+    log.warning("Downloading fruits and vegetables dataset... This might take a while.")
     # Download latest version
     path = kagglehub.dataset_download("muhriddinmuxiddinov/fruits-and-vegetables-dataset")
 
-    print("Path to dataset files:", path)
+    # Move the downloaded dataset to your custom location
+    custom_path = 'data/fruits_vegetables_dataset'
+    dataset_name = 'Fruits_Vegetables_Dataset(12000)'
+    # Assuming the dataset is a zip file, move it
+    shutil.move(os.path.join(path, dataset_name), custom_path)
+    log.warning(f"Dataset downloaded. Path to dataset files: {custom_path}")
+
+    return Path(custom_path)
 
 
 if __name__ == "__main__":
+    hydra.initialize(config_path=os.path.join("..", "..", "configs"), version_base="1.1")
     train_loader, test_loader, val_loader = get_fruits_and_vegetables_dataloaders()
 
     train_dataset = train_loader.dataset
@@ -137,7 +155,7 @@ if __name__ == "__main__":
     print("Validation dataset length:", len(val_loader.dataset))
 
     # Printing length of total dataset
-    print("Total dataset length:", len(train_dataset) + len(test_dataset), + len(val_dataset))
+    print("Total dataset length:", len(train_dataset) + len(test_dataset) + len(val_dataset))
 
     # Printing size of first image
     sample_image, sample_label = train_dataset[4]

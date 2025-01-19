@@ -1,0 +1,15 @@
+hyperparameters:
+  batch_size: 32
+  max_epochs: 10
+
+optimizer:
+  target: torch.optim.Adam
+  learning_rate: 0.001
+  weight_decay: 0.00001
+
+# config.yaml
+hydra:
+  run:
+    dir: .  # Keeps the working directory the same
+  job_logging:
+    level: NONE  # Suppresses Hydra logging

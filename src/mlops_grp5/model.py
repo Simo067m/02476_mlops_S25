@@ -2,7 +2,9 @@ import pytorch_lightning as pl
 import timm
 import torch
 import torch.nn as nn
-from .dataloaders import get_fruits_and_vegetables_dataloaders
+from mlops_grp5.dataloaders import get_fruits_and_vegetables_dataloaders
+
+from mlops_grp5.logger import log
 
 
 def get_model(model_name: str, num_classes: int) -> nn.Module:
@@ -19,7 +21,7 @@ class ImageModel(pl.LightningModule):
                  model_name: str = "test_efficientnet.r160_in1k") -> None:
         super().__init__()
         # Load pretrained model
-        print(f"Initializing model {model_name}...")
+        log.info(f"Initializing model {model_name}...")
         self.model = get_model(model_name, num_classes=2)
 
         # Define hyperparameters
@@ -40,7 +42,7 @@ class ImageModel(pl.LightningModule):
         self.test_losses = []
         self.test_accs = []
 
-        print("Model initialized.")
+        log.info("Model initialized.")
     
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """Forward pass of the model."""
@@ -95,12 +97,15 @@ class ImageModel(pl.LightningModule):
     
     def on_train_epoch_end(self):
         print(f"Epoch {self.current_epoch + 1} Training Loss: {self.train_epoch_loss:.4f}")
+        log.info(f"Epoch {self.current_epoch + 1} Training Loss: {self.train_epoch_loss:.4f}")
     
     def on_validation_epoch_end(self):
         print(f"Epoch {self.current_epoch + 1} Validation Loss: {self.val_epoch_loss:.4f}")
+        log.info(f"Epoch {self.current_epoch + 1} Validation Loss: {self.val_epoch_loss:.4f}")
     
     def on_test_epoch_end(self):
         print(f"Test Loss: {self.test_epoch_loss:.4f} Test Accuracy: {self.test_epoch_acc:.4f}")
+        log.info(f"Test Loss: {self.test_epoch_loss:.4f} Test Accuracy: {self.test_epoch_acc:.4f}")
 
 if __name__ == "__main__":
     # Initialize model
