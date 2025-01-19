@@ -2,17 +2,15 @@ import os
 
 import pytorch_lightning as pl
 import torch
-from dataloaders import get_fruits_and_vegetables_dataloaders
-from model import ImageModel
+from mlops_grp5.dataloaders import get_fruits_and_vegetables_dataloaders
+from mlops_grp5.model import ImageModel
 from pytorch_lightning import Trainer
-from visualize import plot_accuracy, plot_loss
+from mlops_grp5.visualize import plot_accuracy, plot_loss
 
 import wandb
 import hydra
-from hydra.core.utils import configure_log
-from hydra.core.hydra_config import HydraConfig
 
-from logger import log
+from mlops_grp5.logger import log
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 

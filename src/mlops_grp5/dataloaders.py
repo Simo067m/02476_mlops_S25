@@ -8,7 +8,7 @@ from PIL import Image
 from torch.utils.data import DataLoader, Dataset
 from torchvision import transforms
 
-from logger import log
+from mlops_grp5.logger import log
 import hydra
 
 # Seed for reproducibility
@@ -139,7 +139,7 @@ def download_fruits_and_vegetables_dataset() -> str:
 
 
 if __name__ == "__main__":
-    hydra.initialize(config_path=os.path.join("..", "..", "configs"))
+    hydra.initialize(config_path=os.path.join("..", "..", "configs"), version_base="1.1")
     train_loader, test_loader, val_loader = get_fruits_and_vegetables_dataloaders()
 
     train_dataset = train_loader.dataset
