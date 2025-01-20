@@ -3,9 +3,9 @@ import timm
 import torch
 import torch.nn as nn
 from mlops_grp5.dataloaders import get_fruits_and_vegetables_dataloaders
-
 from mlops_grp5.logger import log
 
+DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 def get_model(model_name: str, num_classes: int) -> nn.Module:
     """Gets a pretrained image model from the timm library."""
@@ -106,6 +106,17 @@ class ImageModel(pl.LightningModule):
     def on_test_epoch_end(self):
         print(f"Test Loss: {self.test_epoch_loss:.4f} Test Accuracy: {self.test_epoch_acc:.4f}")
         log.info(f"Test Loss: {self.test_epoch_loss:.4f} Test Accuracy: {self.test_epoch_acc:.4f}")
+    
+    def load_trained_model(learning_rate: float = 1e-3, weight_decay: float = 1e-5):
+        """Loads a model from a state_dict."""
+        # Initialize a new instance of ImageModel
+        model = ImageModel(learning_rate=learning_rate, weight_decay=weight_decay)
+        
+        # Load state_dict
+        state_dict = torch.load('models/model.pth', map_location=torch.device(DEVICE), weights_only=True)
+        model.load_state_dict(state_dict)  # Load weights
+        model.eval()  # Set model to evaluation mode
+        return model
 
 if __name__ == "__main__":
     # Initialize model

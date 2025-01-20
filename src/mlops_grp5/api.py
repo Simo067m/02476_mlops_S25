@@ -1,7 +1,7 @@
 from fastapi import FastAPI, UploadFile, File
 from PIL import Image
 from typing import Dict
-from mlops_grp5.evaluate import load_trained_model
+from mlops_grp5.model import ImageModel
 import torch
 from torchvision import transforms
 
@@ -18,7 +18,7 @@ def read_root():
 @app.on_event("startup")
 async def load_model():
     global model
-    model = load_trained_model(MODEL_CHECKPOINT_PATH)
+    model = ImageModel.load_trained_model()
     print("Model loaded successfully.")
 
 def preprocess_image(image: Image.Image) -> torch.Tensor:
