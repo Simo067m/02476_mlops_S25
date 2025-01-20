@@ -44,6 +44,4 @@ jobs:
 
       - name: Run load tests
         run: |
-          locust -f tests/performance/locustfile.py \
-            --headless --users 10 --spawn-rate 1 --run-time 1m \
-            --host=https://mlops-api-298235842440.europe-west1.run.app
+          locust -f tests/performance/locustfile.py --headless --users 10 --spawn-rate 1 --run-time 1m --host=https://mlops-api-298235842440.europe-west1.run.app
