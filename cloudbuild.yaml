@@ -1,0 +1,33 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  id: 'Build container image'
+  args: [
+    'build',
+    '.',
+    '-t',
+    'europe-west1-docker.pkg.dev/premium-portal-447810-a6/group5-repo/mlops_api_image',
+    '-f',
+    'dockerfiles/api.dockerfile'
+  ]
+- name: 'gcr.io/cloud-builders/docker'
+  id: 'Push container image'
+  args: [
+    'push',
+    'europe-west1-docker.pkg.dev/premium-portal-447810-a6/group5-repo/mlops_api_image'
+  ]
+- name: 'gcr.io/cloud-builders/gcloud'
+  id: 'Deploy to Cloud Run'
+  args: [
+    'run',
+    'deploy',
+    'mlops-api',
+    '--image',
+    'europe-west1-docker.pkg.dev/premium-portal-447810-a6/group5-repo/mlops_api_image',
+    '--region',
+    'europe-west1',
+    '--platform',
+    'managed',
+    '--allow-unauthenticated'
+  ]
+options:
+  logging: CLOUD_LOGGING_ONLY
