@@ -1,25 +1,32 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, UploadFile, File
 from PIL import Image
 from typing import Dict
 from mlops_grp5.model import ImageModel
 import torch
 from torchvision import transforms
+from fastapi import HTTPException
 
 MODEL_CHECKPOINT_PATH = "models/model.pth"
 model = None
 CLASS_LABELS = {0: "Fresh", 1: "Rotten"}
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Handles startup and shutdown logic for the FastAPI app."""
+    global model
+    model = ImageModel.load_trained_model()  # Initialize and load the model
+    print("Model loaded successfully.")
+    yield  # The app runs here
+    print("Shutting down application...")
+
+# Create the FastAPI app with lifespan
+app = FastAPI(lifespan=lifespan)
 
 @app.get("/")
 def read_root():
+    """Root endpoint."""
     return {"message": "FastAPI Inference Application is running!"}
-
-@app.on_event("startup")
-async def load_model():
-    global model
-    model = ImageModel.load_trained_model()
-    print("Model loaded successfully.")
 
 def preprocess_image(image: Image.Image) -> torch.Tensor:
     """Preprocess the input image for inference."""
@@ -33,7 +40,11 @@ def preprocess_image(image: Image.Image) -> torch.Tensor:
 @app.post("/predict/")
 async def predict(file: UploadFile = File(...)) -> Dict:
     """Predict the class of the uploaded image."""
-    image = Image.open(file.file).convert("RGB")  # Ensure the image is in RGB mode
+    try:
+        image = Image.open(file.file).convert("RGB")  # Ensure the image is in RGB mode
+    except Exception as e:
+        raise HTTPException(status_code=400, detail="Invalid image file uploaded")
+
     input_tensor = preprocess_image(image)
 
     # Perform inference

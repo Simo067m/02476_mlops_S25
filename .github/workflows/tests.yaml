@@ -32,7 +32,7 @@ jobs:
           python -m pip install -U pip setuptools wheel
           pip install -r requirements.txt -r requirements_test.txt
           pip list
-      
+
       - name: Install package
         run: |
           pip install -e .
@@ -41,3 +41,8 @@ jobs:
         run: |
           coverage run --rcfile=.coveragerc -m pytest --disable-warnings tests/
           coverage report -m
+
+      - name: Run load tests
+        run: |
+          locust -f tests/performance/locustfile.py \
+            --headless --users 10 --spawn-rate 1 --run-time 1m --host=http://localhost:8080
