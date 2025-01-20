@@ -1,17 +1,25 @@
-# Change from latest to a specific version if your requirements.txt
-FROM python:3.11-slim AS base
+FROM python:3.11-slim
 
+WORKDIR /app
+
+# Install dependencies for building Python packages
 RUN apt update && \
     apt install --no-install-recommends -y build-essential gcc && \
     apt clean && rm -rf /var/lib/apt/lists/*
 
-COPY src src/
-COPY requirements.txt requirements.txt
-COPY requirements_dev.txt requirements_dev.txt
-COPY README.md README.md
-COPY pyproject.toml pyproject.toml
+# Copy the requirements and install them
+COPY requirements.txt /app/requirements.txt
+RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
 
-RUN pip install -r requirements.txt --no-cache-dir --verbose
-RUN pip install . --no-deps --no-cache-dir --verbose
+# Copy only the relevant parts of the project
+COPY src /app/src
+COPY models /app/models
 
-ENTRYPOINT ["uvicorn", "src/mlops_grp5/api:app", "--host", "0.0.0.0", "--port", "8000"]
+# Add the `src` directory to PYTHONPATH
+ENV PYTHONPATH=/app/src
+
+# Expose the default Cloud Run port
+EXPOSE $PORT
+
+# Run the FastAPI application
+CMD exec uvicorn src.mlops_grp5.api:app --port $PORT --host 0.0.0.0
