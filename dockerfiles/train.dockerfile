@@ -6,8 +6,8 @@ RUN apt update && \
     apt clean && rm -rf /var/lib/apt/lists/*
 
 COPY src src/
-COPY requirements.txt requirements.txt
-COPY data/fruits_vegetables_dataset/processed_data data/fruits_vegetables_dataset/processed_data
+COPY requirements_pipreqs.txt requirements.txt
+# COPY data/fruits_vegetables_dataset/processed_data data/fruits_vegetables_dataset/processed_data
 COPY README.md README.md
 COPY pyproject.toml pyproject.toml
 
