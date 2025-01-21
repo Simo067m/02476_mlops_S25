@@ -1,6 +1,9 @@
-from src.mlops_grp5.dataloaders import get_fruits_and_vegetables_dataloaders
-import hydra
 import os
+
+import hydra
+
+from src.mlops_grp5.dataloaders import get_fruits_and_vegetables_dataloaders
+
 
 def test_get_fruits_and_vegetables_dataloaders():
     hydra.initialize(config_path=os.path.join("..", "configs"), version_base="1.1")

@@ -1,11 +1,12 @@
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, UploadFile, File
-from PIL import Image
 from typing import Dict
-from mlops_grp5.model import ImageModel
+
 import torch
+from fastapi import FastAPI, File, HTTPException, UploadFile
+from PIL import Image
 from torchvision import transforms
-from fastapi import HTTPException
+
+from mlops_grp5.model import ImageModel
 
 MODEL_CHECKPOINT_PATH = "models/model.pth"
 model = None

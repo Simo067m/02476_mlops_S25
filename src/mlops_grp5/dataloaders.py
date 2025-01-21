@@ -1,7 +1,8 @@
 import os
-from pathlib import Path
 import shutil
+from pathlib import Path
 
+import hydra
 import kagglehub
 import torch
 from PIL import Image
@@ -9,7 +10,6 @@ from torch.utils.data import DataLoader, Dataset
 from torchvision import transforms
 
 from mlops_grp5.logger import log
-import hydra
 
 # Seed for reproducibility
 torch.manual_seed(0)

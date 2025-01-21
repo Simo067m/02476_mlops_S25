@@ -1,7 +1,6 @@
 from fastapi.testclient import TestClient
-from mlops_grp5.api import app  # Ensure this path is correct for your project structure
-import os
-import random
+
+from mlops_grp5.api import app
 
 client = TestClient(app)
 
@@ -23,5 +22,5 @@ def test_valid_predict():
 def test_invalid_prediction():
     with TestClient(app) as client:
         response = client.post("/predict/", files={"file": ("text.txt", b"Invalid content", "text/plain")})
-        assert response.status_code == 400  # Now expect a 400 Bad Request
+        assert response.status_code == 400
         assert response.json() == {"detail": "Invalid image file uploaded"}

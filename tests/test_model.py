@@ -2,6 +2,7 @@ import torch
 
 from src.mlops_grp5.model import ImageModel
 
+
 def test_image_model():
     model = ImageModel(1., 1.)
     

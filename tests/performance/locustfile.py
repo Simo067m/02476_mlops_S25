@@ -1,5 +1,6 @@
 from locust import HttpUser, between, task
 
+
 class LoadTestUser(HttpUser):
     wait_time = between(1, 2)  # Simulate a delay between requests
 

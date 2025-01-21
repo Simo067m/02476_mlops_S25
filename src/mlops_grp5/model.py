@@ -2,6 +2,7 @@ import pytorch_lightning as pl
 import timm
 import torch
 import torch.nn as nn
+
 from mlops_grp5.dataloaders import get_fruits_and_vegetables_dataloaders
 from mlops_grp5.logger import log
 
