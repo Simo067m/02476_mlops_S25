@@ -183,7 +183,7 @@ The final command is necessary for installing the development environment as a p
 >
 > Answer:
 
---- question 5 fill here ---
+--- We followed the structure of the cookiecutter template very closely, and have used the src, models, tests and dockerfiles folders especially. We kept all the created folders as they were used, even if it was to a small extent. However, we removed evaluate.py, as we did model evaluation as part of the training in train.py. We have added a configs folder as well as a logs folder, for keeping track of user-defined logs and hydra config files respectively. Each local version of the development environment contains several cache folders which are ignored in the gitignore. These include ruff caches and mypy caches, which are created upon running ruff and mypy lint and formatting checkers. ---
 
 ### Question 6
 
