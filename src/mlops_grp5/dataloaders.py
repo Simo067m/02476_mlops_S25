@@ -23,7 +23,9 @@ class FruitsVegetablesDataset(Dataset):
         log.info(f"Data path: {data_path}")
         
         self.data_path = data_path
-        self.save_data_path = self.data_path / "processed_data"
+        self.save_data_path = self.data_path #/ "processed_data"
+
+        log.info(f"Initializing FruitsVegetablesDataset with data path: {data_path}")
         
         # Define class-to-index mapping
         self.class_to_idx = {"Fresh": 0, "Rotten": 1}
@@ -99,12 +101,18 @@ def get_fruits_and_vegetables_dataloaders(
 ):
     config = hydra.compose(config_name="data/data_config.yaml")
     log.info(f"Using data config: {config}")
+
     """Returns dataloaders for the fruits and vegetables dataset."""
-    # Download the dataset if it doesn't exist
-    if not os.path.exists("data/fruits_vegetables_dataset"):
-        data_path = download_fruits_and_vegetables_dataset()
-    else:
-        data_path = Path("data/fruits_vegetables_dataset")
+    
+    # Download the dataset locally if it doesn't exist
+    #if not os.path.exists("data/fruits_vegetables_dataset"):
+    #    data_path = download_fruits_and_vegetables_dataset()
+    #else:
+    #    data_path = Path("data/fruits_vegetables_dataset")
+
+    # Using Cloud Storage in bucket
+    data_path = Path("/gcs/fruits_vegetables_dataset/data/fruits_vegetables_dataset/processed_data")
+    log.info(f"Using data path: {data_path}")
 
     dataset = FruitsVegetablesDataset(data_path)
 

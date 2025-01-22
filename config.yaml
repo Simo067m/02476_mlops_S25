@@ -1,0 +1,15 @@
+workerPoolSpecs:
+    machineSpec:
+        machineType: n1-highmem-2
+    replicaCount: 1
+    containerSpec:
+        imageUri: europe-west1-docker.pkg.dev/premium-portal-447810-a6/group5-repo/train_example
+        command:
+        - python
+        - src/mlops_grp5/train.py
+        args:
+        - --max-epochs
+        - "2"
+        env:
+        - name: WANDB_API_KEY
+          value: "a1827166ea9c6177cc92254a1b5aee37e7026022"

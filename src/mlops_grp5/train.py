@@ -13,6 +13,8 @@ from mlops_grp5.visualize import plot_accuracy, plot_loss
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
+wandb.login(key=os.getenv("WANDB_API_KEY"))
+
 @hydra.main(config_name="config.yaml", config_path=f"{os.getcwd()}/configs", version_base="1.1")
 def train_model(config):
     log.info(f"Training on device: {DEVICE}")
