@@ -118,7 +118,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- 5 ---
+5
 
 ### Question 2
 > **Enter the study number for each member in the group**
@@ -129,7 +129,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- s214592, s214634, s214605, s214641 ---
+s214592, s214634, s214605, s214641
 
 ### Question 3
 > **A requirement to the project is that you include a third-party package not covered in the course. What framework**
@@ -143,7 +143,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- We used the third-party framework pytorch-image-models from huggingface. We used the functionality to load pre-trained image models from the package to load a pre-trained model into our project. This pre-trained model could then be used to finetune on our own dataset. This allowed us to circumvent training a model on a large dataset which would both be time consuming and resource intensive. We also used the third-party framework kagglehub to programatically download data from Kaggle using their package. This allows us to download data directly from Kaggle and can therefore also be used instead of data version control if this is desired. ---
+We used the third-party framework pytorch-image-models from huggingface. We used the functionality to load pre-trained image models from the package to load a pre-trained model into our project. This pre-trained model could then be used to finetune on our own dataset. This allowed us to circumvent training a model on a large dataset which would both be time consuming and resource intensive. We also used the third-party framework kagglehub to programatically download data from Kaggle using their package. This allows us to download data directly from Kaggle and can therefore also be used instead of data version control if this is desired.
 
 ## Coding environment
 
@@ -163,11 +163,10 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- We used requirements.txt files for managing our dependencies. The list was auto-generated using pipreqs. The requirements are divided into requirements.txt, requirements_dev.txt and requirements_test.txt. The regular requirements file is required to run the scripts in the environment. The dev requirements are necessary for developing, including formatting tools like ruff, which are not strictly required for running the scripts. The final requirements for testing is necessary for running the unit tests. To get a complete copy of our development environment, one would have to run the following commands:
+We used requirements.txt files for managing our dependencies. The list was auto-generated using pipreqs. The requirements are divided into requirements.txt, requirements_dev.txt and requirements_test.txt. The regular requirements file is required to run the scripts in the environment. The dev requirements are necessary for developing, including formatting tools like ruff, which are not strictly required for running the scripts. The final requirements for testing is necessary for running the unit tests. To get a complete copy of our development environment, one would have to run the following commands:
 pip install -r requirements.txt -r requirements_dev.txt
 pip install -e .
 The final command is necessary for installing the development environment as a package.
----
 
 ### Question 5
 
@@ -183,7 +182,7 @@ The final command is necessary for installing the development environment as a p
 >
 > Answer:
 
---- We followed the structure of the cookiecutter template very closely, and have used the src, models, tests and dockerfiles folders especially. We kept all the created folders as they were used, even if it was to a small extent. However, we removed evaluate.py, as we did model evaluation as part of the training in train.py. We have added a configs folder as well as a logs folder, for keeping track of user-defined logs and hydra config files respectively. Each local version of the development environment contains several cache folders which are ignored in the gitignore. These include ruff caches and mypy caches, which are created upon running ruff and mypy lint and formatting checkers. ---
+We followed the structure of the cookiecutter template very closely, and have used the src, models, tests and dockerfiles folders especially. We kept all the created folders as they were used, even if it was to a small extent. However, we removed evaluate.py, as we did model evaluation as part of the training in train.py. We have added a configs folder as well as a logs folder, for keeping track of user-defined logs and hydra config files respectively. Each local version of the development environment contains several cache folders which are ignored in the gitignore. These include ruff caches and mypy caches, which are created upon running ruff and mypy lint and formatting checkers.
 
 ### Question 6
 
@@ -198,7 +197,7 @@ The final command is necessary for installing the development environment as a p
 >
 > Answer:
 
---- We did not implement our own rules for code formatting, but used the rules from the cookiecutter template pyproject.toml and checked those with ruff. We did decide on functions generally requiring at least a small sentence of documentation. We used ruff and mypy to actually check the linting and formatting and let it auto fix these issues when possible. Documentation, typing and formatting is very important in larger projects because it keeps code readable for everyone, even people who did not work on a specific part of the project. This also allows others to work on code they did not previously work on, and keeps a project streamlined, avoiding unnecessary issues with data types and confusion of functionality. ---
+We did not implement our own rules for code formatting, but used the rules from the cookiecutter template pyproject.toml and checked those with ruff. We did decide on functions generally requiring at least a small sentence of documentation. We used ruff and mypy to actually check the linting and formatting and let it auto fix these issues when possible. Documentation, typing and formatting is very important in larger projects because it keeps code readable for everyone, even people who did not work on a specific part of the project. This also allows others to work on code they did not previously work on, and keeps a project streamlined, avoiding unnecessary issues with data types and confusion of functionality.
 
 ## Version control
 
@@ -262,7 +261,7 @@ We used both branches as well as pull requests. The branches were named after wh
 >
 > Answer:
 
-We used DVC through the cloud, to have control of the data and easy usage of the data for all participants. This ensured all of the group members had access to the same data. We did not update or add to the dataset throughout the project, however using DVC would have made this easier and shown when the data was changed or added to.
+We used DVC through the cloud, to have control of the data and easy usage of the data for all participants. This ensured all of the group members had access to the same data. We did not update or add to the dataset throughout the project, however using DVC would have made this easier and shown when the data was changed or added to. Version controlling your data is beneficial in the same way that it is beneficial to version control your code. It allows us to know what versions of data was used at what times, and what experiments. This also makes it possible to revert to older versions of data in case something went wrong.
 
 ### Question 11
 
@@ -279,7 +278,8 @@ We used DVC through the cloud, to have control of the data and easy usage of the
 >
 > Answer:
 
-We used a workflow which runs the tests and coverage when doing pull requests to the mater branch. This tests our code using three operating systems and on 2 versions of python. We use pip cache. We also have a dependabot which is triggered monthly to ensure all dependencies are updated and work together. 
+We used a workflow which runs the tests using pytest and test code coverage when doing pull requests and pushes to the master branch. This tests our code using three operating systems: Windows, Ubuntu and MacOS. It also tests on 2 different versions of python. We use pip cache for faster testing. We also have a dependabot which is triggered monthly to ensure all dependencies are updated and work together. The continuous testing is divided into a tests.yaml file, and the dependabot is in a dependabot.yaml file. One of the tests involves dataloading, which required the data to be download on GitHub for the loading to be actually tested. This slows down the tests, but avoids the issue of being unable to push large datasets to a GitHub repository, while retaining the ability to test the functionality.
+An example of a triggered workflow can be found here: https://github.com/Simo067m/02476_mlops_S25/actions/runs/12922261069. This workflow includes the unit tests from the project and is a successful run where all tests passed. On top of these, some cloud triggers also run on GitHub, but these are not defined in the .github folder. They are therefore not directly part of the GitHub workflows, but are still necessary to pass for a branch to be able to merge to master.
 
 ## Running code and tracking experiments
 
@@ -298,7 +298,7 @@ We used a workflow which runs the tests and coverage when doing pull requests to
 >
 > Answer:
 
-When running experiments we used Wandb Sweeps and Wandb configurations to run with different hyperparameters. The sweep is initialized in a config file. The file can be run either using argparser or the invoke setup. Using invoke is simply done as: invoke train. Otherwise using: Python train.py.  
+When running experiments we used Wandb Sweeps and Wandb configurations to run with different hyperparameters. The sweep is initialized in a config file. The file can be run either using argparser or the invoke setup. Using invoke is simply done as: invoke train. If hyperparameters are not being tuned, config files are used, loaded by hydra. Then, the train script is simply run when the config file exists: python src/mlops_grp5/train.py.
 
 ### Question 13
 
@@ -313,7 +313,7 @@ When running experiments we used Wandb Sweeps and Wandb configurations to run wi
 >
 > Answer:
 
-When running experiments the model and hyperparameters were saved using Wandb, to ensure models are saved along with their hyperparameters. The larger sweeps were run using a sweep.yaml config file, which can be used again to rerun and reproduce the same results. 
+When starting training, a run is created in Wandb, which logs the hyperparameters and any information and metrics about how the training goes. The hyperparameters are loaded through config files, which makes it possible to re-run the experiment by loading the same config file. The trained model is saved locally and in the Wand model registry, allowing it to be loaded in for future inference. The larger hyperparameter sweeps were run using a sweep.yaml config file, which can be used again to rerun and reproduce the same results. To reproduce an experiment one would need the config file with the hyperparameters and the name of the model. The name of the model and other information during training is logged in a log file under the logs/ directory.
 
 ### Question 14
 
