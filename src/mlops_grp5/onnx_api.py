@@ -71,6 +71,7 @@ def preprocess_image(image: Image.Image) -> np.ndarray:
 async def predict(file: UploadFile = File(...)) -> Dict:
     """Predict the class of the uploaded image using ONNX."""
     try:
+        # Load and preprocess the image
         image = Image.open(file.file).convert("RGB")  # Ensure the image is in RGB mode
     except Exception as e:
         raise HTTPException(status_code=400, detail="Invalid image file uploaded")
@@ -81,7 +82,17 @@ async def predict(file: UploadFile = File(...)) -> Dict:
     input_name = onnx_session.get_inputs()[0].name
     output_name = onnx_session.get_outputs()[0].name
     predictions = onnx_session.run([output_name], {input_name: input_tensor})
-    predicted_class = np.argmax(predictions[0])
 
-    predicted_label = CLASS_LABELS[predicted_class]
-    return {"predicted_class": predicted_label}
+    # Get probabilities (apply softmax)
+    probabilities = torch.nn.functional.softmax(torch.tensor(predictions[0]), dim=1).numpy()
+
+    # Get predicted class
+    predicted_class = np.argmax(probabilities)
+
+    # Prepare the response
+    response = {
+        "predicted_class": CLASS_LABELS[predicted_class],
+        "confidence_scores": probabilities[0].tolist(),  # Convert to list for JSON serialization
+    }
+    return response
+
