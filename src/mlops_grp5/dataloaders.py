@@ -104,15 +104,18 @@ def get_fruits_and_vegetables_dataloaders(
 
     """Returns dataloaders for the fruits and vegetables dataset."""
     
-    # Download the dataset locally if it doesn't exist
-    #if not os.path.exists("data/fruits_vegetables_dataset"):
-    #    data_path = download_fruits_and_vegetables_dataset()
-    #else:
-    #    data_path = Path("data/fruits_vegetables_dataset")
+    gcs_path = Path("/gcs/fruits_vegetables_dataset/data/fruits_vegetables_dataset/processed_data")
+    local_path = Path("data/fruits_vegetables_dataset")
 
-    # Using Cloud Storage in bucket
-    data_path = Path("/gcs/fruits_vegetables_dataset/data/fruits_vegetables_dataset/processed_data")
-    log.info(f"Using data path: {data_path}")
+    if gcs_path.exists():
+        data_path = gcs_path
+        log.info(f"Using GCS path: {data_path}")
+    elif local_path.exists():
+        data_path = local_path
+        log.info(f"Using local path: {data_path}")
+    else:
+        log.warning("Dataset not found locally or on GCS. Downloading dataset...")
+        data_path = download_fruits_and_vegetables_dataset()
 
     dataset = FruitsVegetablesDataset(data_path)
 
