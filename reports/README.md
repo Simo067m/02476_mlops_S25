@@ -217,7 +217,7 @@ The final command is necessary for installing the development environment as a p
 >
 > Answer:
 
---- question 7 fill here ---
+We implemented 5 different test cases across 3 different files. They test the data, to check if it is the correct dataset that is loaded, we check that the model is able to recieve data of the correct shape and give the expected output shape. The lasts tests ensure that the API is working, and is able to give a valid prediction and invalid prediction, based on input format. 
 
 ### Question 8
 
@@ -232,7 +232,7 @@ The final command is necessary for installing the development environment as a p
 >
 > Answer:
 
---- question 8 fill here ---
+Our code coverage is XX. However coverage is not necessarily a clear way to determine wether all bugs will be prevented. The tests should cover much of the code, but rather having good tests that are able to find bugs is more important.
 
 ### Question 9
 
@@ -247,7 +247,7 @@ The final command is necessary for installing the development environment as a p
 >
 > Answer:
 
---- question 9 fill here ---
+We used both branches as well as pull requests. The branched were named after which specific feature was introduced in that branch. This allowed parallel workflow and avoided merge conflicts. When merging code at least one peer had to review and aprove, as well as tests being run to ensure the code still passed the requirements we set. 
 
 ### Question 10
 
@@ -262,7 +262,7 @@ The final command is necessary for installing the development environment as a p
 >
 > Answer:
 
---- question 10 fill here ---
+We used DVC through the cloud, to have control of the data and easy usage of the data for all participants. This ensured all of the group members had access to the same data. We did not update or add to the dataset throughout the project, however using DVC would have made this easier and shown when the data was changed or added to.
 
 ### Question 11
 
@@ -279,7 +279,7 @@ The final command is necessary for installing the development environment as a p
 >
 > Answer:
 
---- question 11 fill here ---
+We used a workflow which runs the tests and coverage when doing pull requests to the mater branch. This tests our code using three operating systems and on 2 versions of python. We use pip cache. We also have a dependabot which is triggered monthly to ensure all dependencies are updated and work together. 
 
 ## Running code and tracking experiments
 
@@ -298,7 +298,7 @@ The final command is necessary for installing the development environment as a p
 >
 > Answer:
 
---- question 12 fill here ---
+When running experiments we used Wandb Sweeps and Wandb configurations to run with different hyperparameters. The sweep is initialized in a config file. The file can be run either using argparser or the invoke setup. Using invoke is simply done as: invoke train. Otherwise using: Python train.py.  
 
 ### Question 13
 
@@ -313,7 +313,7 @@ The final command is necessary for installing the development environment as a p
 >
 > Answer:
 
---- question 13 fill here ---
+When running experiments the model and hyperparameters were saved using Wandb, to ensure models are saved along with their hyperparameters. The larger sweeps were run using a sweep.yaml config file, which can be used again to rerun and reproduce the same results. 
 
 ### Question 14
 
