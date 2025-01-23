@@ -32,12 +32,13 @@ class FruitsVegetablesDataset(Dataset):
         self.idx_to_class = {v: k for k, v in self.class_to_idx.items()}
 
         # Check if data should be processed, if not, load the data
-        if not os.path.exists(self.save_data_path):
+        try:
+            self.data = torch.load(self.save_data_path / "data.pt")
+            self.labels = torch.load(self.save_data_path / "labels.pt")
+            log.info("Preprocessed data loaded.")
+        except FileNotFoundError:
+            log.warning("Preprocessed data not found. Triggering preprocessing...")
             self.pre_process()
-        else:
-            log.info("Loading pre-processed data...")
-            self.data = torch.load(self.save_data_path / "data.pt", weights_only=True)
-            self.labels = torch.load(self.save_data_path / "labels.pt", weights_only=True)
         
         log.info("Data loaded.")
 
