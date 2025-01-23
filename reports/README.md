@@ -98,7 +98,7 @@ will check the repositories and the code to verify your answers.
 * [ ] Instrument your API with a couple of system metrics (M28)
 * [ ] Setup cloud monitoring of your instrumented application (M28)
 * [ ] Create one or more alert systems in GCP to alert you if your app is not behaving correctly (M28)
-* [ ] If applicable, optimize the performance of your data loading using distributed data loading (M29)
+* [x] If applicable, optimize the performance of your data loading using distributed data loading (M29)
 * [ ] If applicable, optimize the performance of your training pipeline by using distributed training (M30)
 * [ ] Play around with quantization, compilation and pruning for you trained models to increase inference speed (M31)
 
@@ -198,7 +198,7 @@ The final command is necessary for installing the development environment as a p
 >
 > Answer:
 
---- question 6 fill here ---
+--- We did not implement our own rules for code formatting, but used the rules from the cookiecutter template pyproject.toml and checked those with ruff. We did decide on functions generally requiring at least a small sentence of documentation. We used ruff and mypy to actually check the linting and formatting and let it auto fix these issues when possible. Documentation, typing and formatting is very important in larger projects because it keeps code readable for everyone, even people who did not work on a specific part of the project. This also allows others to work on code they did not previously work on, and keeps a project streamlined, avoiding unnecessary issues with data types and confusion of functionality. ---
 
 ## Version control
 
@@ -232,7 +232,7 @@ We implemented 5 different test cases across 3 different files. They test the da
 >
 > Answer:
 
-Our code coverage is XX. However coverage is not necessarily a clear way to determine wether all bugs will be prevented. The tests should cover much of the code, but rather having good tests that are able to find bugs is more important.
+Our code coverage is 78%, which is most of our source code. Most of what is not covered is functionality relating to the model defining logging and training. Also, the data script for data pre-processing is mostly tested for loading working, and not that pre-processing is correct. However coverage is not necessarily a clear way to determine wether all bugs will be prevented. The tests should cover much of the code, but rather having good tests that are able to find bugs is more important. Because of this, 78% code coverage is acceptable, as the untested code is simple functionality which relies on earlier functions working, which are parts of the tests. This means that leaving these parts untested are not detrimental to the overall functionality of the project.
 
 ### Question 9
 
@@ -247,7 +247,7 @@ Our code coverage is XX. However coverage is not necessarily a clear way to dete
 >
 > Answer:
 
-We used both branches as well as pull requests. The branched were named after which specific feature was introduced in that branch. This allowed parallel workflow and avoided merge conflicts. When merging code at least one peer had to review and aprove, as well as tests being run to ensure the code still passed the requirements we set. 
+We used both branches as well as pull requests. The branches were named after which specific feature was introduced in that branch, and were not exclusive to a specific group member, but rather exclusive to the specific feature. This allowed parallel workflow and avoided merge conflicts, which personal branches would likely introduce. When merging code at least one peer had to review and aprove, as well as tests being run and passed to ensure the code still passed the requirements we set. Branches and pull requests are important to ensure that the functionality of the main branch, which is actually running the program or live service, remains stable and working as intended.
 
 ### Question 10
 

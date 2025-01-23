@@ -15,6 +15,7 @@ DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 @hydra.main(config_name="config.yaml", config_path=f"{os.getcwd()}/configs", version_base="1.1")
 def train_model(config):
+    """Trains and tests a model."""
     log.info(f"Training on device: {DEVICE}")
     torch.cuda.empty_cache()
     log.info(f"Using config: {config}")
