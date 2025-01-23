@@ -330,7 +330,14 @@ When starting training, a run is created in Wandb, which logs the hyperparameter
 >
 > Answer:
 
---- question 14 fill here ---
+We used Wandb to log metrics from experiments, utilizing the features for sharing and experiment tracking.
+![Figure 1](figures/wandb_one.png)
+As seen in the first image, we track the loss during training both for training steps and for validation steps. This is a numerical metric that is logged by the pytorch-lightning model. It shows the progress of the model loss during each training epoch, and the same for the validation steps. The graph is layered with multiple runs and experiments, which are labeled in the legend below the graph title.
+![Figure 2](figures/wandb_two.png)
+As seen in the second image, during the testing step, there is only a single epoch naturally, so we do not have a graph the same way as the training loss graphs. Instead, it is simply a measure of how high the accuracy was on the test set after the model finished training. Since the graph is visualized as a bar even if the metric is simply one number, it makes it easy to compare visually what experiments performed better than others.
+![Figure 3](figures/wandb_sweep.png)
+As seen in the third image, hyperparameter sweeps are visualized with the hyperparameters that were tested during the search.
+The loss metrics are important since they show how well the training is going, as we want to minimize the loss, meaning this graph should have an overall decline over the progress of the training. The accuracy is important in a different way, since it shows how often the model predicts correctly, so we want this metric to be as high as possible.
 
 ### Question 15
 
@@ -345,7 +352,7 @@ When starting training, a run is created in Wandb, which logs the hyperparameter
 >
 > Answer:
 
---- question 15 fill here ---
+We have several images in our project: one for training, two for api deployment, and one for frontend deployment. For example, in order to run the training docker image, in which it is assumed that the hyperparameter config file is already contained, you would run: docker run --name *experiment_name* train:latest. Since the config file is contained in the image, there is no need to add any command line arguments. Having a dockerfile allows containerization and deployment, and an image can be automatically built from a dockerfile using automated workflows when code updates happen. This could be automatically training a new model and deploying it when changes are made to the model script.
 
 ### Question 16
 
@@ -360,7 +367,7 @@ When starting training, a run is created in Wandb, which logs the hyperparameter
 >
 > Answer:
 
---- question 16 fill here ---
+Debugging was done using the native visual studio code debugger. Sometimes debugging was also done by print statements in the code and running it like normal. In generally our code is relatively simple and does not include many different scripts, therefore we opted to not perform profiling as there are not many changes to be made to the training loop, as this is handled by pytorch-lightning and is not defined by us. This does not mean that the code is perfect, but we do not believe that profiling will provide much in terms of optimization compared to a larger project that is involved with more parts than this one. 
 
 ## Working in the cloud
 
@@ -377,7 +384,7 @@ When starting training, a run is created in Wandb, which logs the hyperparameter
 >
 > Answer:
 
---- question 17 fill here ---
+
 
 ### Question 18
 
@@ -516,7 +523,7 @@ When starting training, a run is created in Wandb, which logs the hyperparameter
 >
 > Answer:
 
---- question 27 fill here ---
+In total we used credits worth 1.14$. The most expensive thing was artifact registry, taking up around 50% of credits. The next most expensive was the compute engine. This was due to the nature of the google cloud platform, where running code in a virtual machine is much more costly than storing data in the cloud. In general, working in the cloud is very powerful, but can also be very convoluted, as there are many, many different services which all require their own setup. Security and costs are different concerns which you do not consider as often when working locally.
 
 ### Question 28
 
@@ -532,7 +539,7 @@ When starting training, a run is created in Wandb, which logs the hyperparameter
 >
 > Answer:
 
---- question 28 fill here ---
+We implemented a frontend for our API. Since the model is an image model for classifying fresh or rotten fruits and vegetables, we wanted to allow the user to easily upload images. This was done via a frontend.
 
 ### Question 29
 
@@ -563,7 +570,7 @@ When starting training, a run is created in Wandb, which logs the hyperparameter
 >
 > Answer:
 
---- question 30 fill here ---
+Many of the challenges in the project was not necessarily using a tool by itself in the project, but rather the integration of multiple new tools together at the same time. For example, when setting up config files by hydra, we experienced issues in other scripts, as Hydra wants to be initialized once, and only once, but we wanted to have multiple config files for data and models seperately. This meant having to redo how some functionality worked in order to accomodate being sure that Hydra always only initializes once. As mentioned previously, working in the cloud can be quite complicated, especially when you are not very used to it. The abundance of functions makes it very easy to get disoriented, and the level of security is very different to working only locally, which is what we are most used to. Docker also caused some issues, as it can be quite abstract to understand how it works, and the images tend to be quite large even when you make sure to keep them as small as possible. Working with creating a package and having a pyproject.toml file also gave a few issues with relative imports and when importing a script from a directory that is far away from the current directory. An example of this is importing functions from src/ in the tests/ directory. However, this could largely be fixed by making sure the package was installed locally and by using absolute imports via the package.
 
 ### Question 31
 
