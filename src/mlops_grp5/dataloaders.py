@@ -95,7 +95,7 @@ class FruitsVegetablesDataset(Dataset):
         log.info("Data pre-processing complete.")
 
 def get_fruits_and_vegetables_dataloaders(
-    batch_size: int = 32, train_split: float = 0.6, test_split: float = 0.2
+    batch_size: int = 32, train_split: float = 0.6, test_split: float = 0.2, dist_data_loading: bool = False
 ):
     config = hydra.compose(config_name="data/data_config.yaml")
     log.info(f"Using data config: {config}")
@@ -116,9 +116,15 @@ def get_fruits_and_vegetables_dataloaders(
     # Split into train and test
     train_dataset, test_dataset, val_dataset = torch.utils.data.random_split(dataset, [train_size, test_size, val_size])
 
-    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=0)
-    test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False, num_workers=0)
-    val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False, num_workers=0)
+    # Use distributed data loading
+    if dist_data_loading:
+        num_workers = 4
+    else:
+        num_workers = 0
+
+    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=num_workers)
+    test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False, num_workers=num_workers)
+    val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False, num_workers=num_workers)
 
     return train_loader, test_loader, val_loader
 
