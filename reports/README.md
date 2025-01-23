@@ -556,7 +556,8 @@ We implemented a frontend for our API. Since the model is an image model for cla
 >
 > Answer:
 
---- question 29 fill here ---
+![Pipeline](figures/pipeline.png)
+The figure shows the overall structure of the pipeline. A developer pushes code to the GitHub repository, which triggers GitHub actions to perform tests. This also triggers an action in the cloud to create a new docker image based on the updated code. When the dev runs an experiment from a config file loaded by Hydra, the progess is logged to Wandb. At the end of the training, the model is saved to the Wandb model registry. On the Google cloud platform, a docker image is created for the API which then can be accessed by the end user. This makes the API use the latest model. When the user accesses the API, the latest API docker image is pulled for inference, and the user can upload their image to the API frontend to get a response. The user can then visually see what the result of the model inference was. The data also exists on the Google Cloud Platform, which can then be intertwined with the docker images created for training, as data can simply be pulled from the Google Cloud Buckets, making it unnecessary to have a local copy of the data. When the user interacts with the API, this can also be monitored on the Google Cloud Platform, making the connection double sided.
 
 ### Question 30
 
@@ -588,4 +589,8 @@ Many of the challenges in the project was not necessarily using a tool by itself
 > *We have used ChatGPT to help debug our code. Additionally, we used GitHub Copilot to help write some of our code.*
 > Answer:
 
---- question 31 fill here ---
+Student s214592 was in charge of setting up the initial template and the model training. They also setup the train dockerfile, local logging and a few unit tests.
+Student s214634 was in charge of Wandb logging and model registry, hyperparameter sweeping and training updates.
+Student s214605 was in charge of cloud deployment and the GCP project including vm-integration and data storage.
+Student s214641 was in charge of API development and deployment of it, as well as load testing and unit testing of the API.
+We have used ChatGPT to help debug our code and to generate some low-level logic code.
