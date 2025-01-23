@@ -98,7 +98,7 @@ will check the repositories and the code to verify your answers.
 * [ ] Instrument your API with a couple of system metrics (M28)
 * [ ] Setup cloud monitoring of your instrumented application (M28)
 * [ ] Create one or more alert systems in GCP to alert you if your app is not behaving correctly (M28)
-* [ ] If applicable, optimize the performance of your data loading using distributed data loading (M29)
+* [x] If applicable, optimize the performance of your data loading using distributed data loading (M29)
 * [ ] If applicable, optimize the performance of your training pipeline by using distributed training (M30)
 * [ ] Play around with quantization, compilation and pruning for you trained models to increase inference speed (M31)
 
@@ -118,7 +118,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- 5 ---
+5
 
 ### Question 2
 > **Enter the study number for each member in the group**
@@ -129,7 +129,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- s214592, s214634, s214605, s214641 ---
+s214592, s214634, s214605, s214641
 
 ### Question 3
 > **A requirement to the project is that you include a third-party package not covered in the course. What framework**
@@ -143,7 +143,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- We used the third-party framework pytorch-image-models from huggingface. We used the functionality to load pre-trained image models from the package to load a pre-trained model into our project. This pre-trained model could then be used to finetune on our own dataset. This allowed us to circumvent training a model on a large dataset which would both be time consuming and resource intensive. We also used the third-party framework kagglehub to programatically download data from Kaggle using their package. This allows us to download data directly from Kaggle and can therefore also be used instead of data version control if this is desired. ---
+We used the third-party framework pytorch-image-models from huggingface. We used the functionality to load pre-trained image models from the package to load a pre-trained model into our project. This pre-trained model could then be used to finetune on our own dataset. This allowed us to circumvent training a model on a large dataset which would both be time consuming and resource intensive. We also used the third-party framework kagglehub to programatically download data from Kaggle using their package. This allows us to download data directly from Kaggle and can therefore also be used instead of data version control if this is desired.
 
 ## Coding environment
 
@@ -163,11 +163,10 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- We used requirements.txt files for managing our dependencies. The list was auto-generated using pipreqs. The requirements are divided into requirements.txt, requirements_dev.txt and requirements_test.txt. The regular requirements file is required to run the scripts in the environment. The dev requirements are necessary for developing, including formatting tools like ruff, which are not strictly required for running the scripts. The final requirements for testing is necessary for running the unit tests. To get a complete copy of our development environment, one would have to run the following commands:
+We used requirements.txt files for managing our dependencies. The list was auto-generated using pipreqs. The requirements are divided into requirements.txt, requirements_dev.txt and requirements_test.txt. The regular requirements file is required to run the scripts in the environment. The dev requirements are necessary for developing, including formatting tools like ruff, which are not strictly required for running the scripts. The final requirements for testing is necessary for running the unit tests. To get a complete copy of our development environment, one would have to run the following commands:
 pip install -r requirements.txt -r requirements_dev.txt
 pip install -e .
 The final command is necessary for installing the development environment as a package.
----
 
 ### Question 5
 
@@ -183,7 +182,7 @@ The final command is necessary for installing the development environment as a p
 >
 > Answer:
 
---- question 5 fill here ---
+We followed the structure of the cookiecutter template very closely, and have used the src, models, tests and dockerfiles folders especially. We kept all the created folders as they were used, even if it was to a small extent. However, we removed evaluate.py, as we did model evaluation as part of the training in train.py. We have added a configs folder as well as a logs folder, for keeping track of user-defined logs and hydra config files respectively. Each local version of the development environment contains several cache folders which are ignored in the gitignore. These include ruff caches and mypy caches, which are created upon running ruff and mypy lint and formatting checkers.
 
 ### Question 6
 
@@ -198,7 +197,7 @@ The final command is necessary for installing the development environment as a p
 >
 > Answer:
 
---- question 6 fill here ---
+We did not implement our own rules for code formatting, but used the rules from the cookiecutter template pyproject.toml and checked those with ruff. We did decide on functions generally requiring at least a small sentence of documentation. We used ruff and mypy to actually check the linting and formatting and let it auto fix these issues when possible. Documentation, typing and formatting is very important in larger projects because it keeps code readable for everyone, even people who did not work on a specific part of the project. This also allows others to work on code they did not previously work on, and keeps a project streamlined, avoiding unnecessary issues with data types and confusion of functionality.
 
 ## Version control
 
@@ -217,7 +216,7 @@ The final command is necessary for installing the development environment as a p
 >
 > Answer:
 
---- question 7 fill here ---
+We implemented 5 different test cases across 3 different files. They test the data, to check if it is the correct dataset that is loaded, we check that the model is able to recieve data of the correct shape and give the expected output shape. The lasts tests ensure that the API is working, and is able to give a valid prediction and invalid prediction, based on input format. 
 
 ### Question 8
 
@@ -232,7 +231,7 @@ The final command is necessary for installing the development environment as a p
 >
 > Answer:
 
---- question 8 fill here ---
+Our code coverage is 78%, which is most of our source code. Most of what is not covered is functionality relating to the model defining logging and training. Also, the data script for data pre-processing is mostly tested for loading working, and not that pre-processing is correct. However coverage is not necessarily a clear way to determine wether all bugs will be prevented. The tests should cover much of the code, but rather having good tests that are able to find bugs is more important. Because of this, 78% code coverage is acceptable, as the untested code is simple functionality which relies on earlier functions working, which are parts of the tests. This means that leaving these parts untested are not detrimental to the overall functionality of the project.
 
 ### Question 9
 
@@ -247,7 +246,7 @@ The final command is necessary for installing the development environment as a p
 >
 > Answer:
 
---- question 9 fill here ---
+We used both branches as well as pull requests. The branches were named after which specific feature was introduced in that branch, and were not exclusive to a specific group member, but rather exclusive to the specific feature. This allowed parallel workflow and avoided merge conflicts, which personal branches would likely introduce. When merging code at least one peer had to review and aprove, as well as tests being run and passed to ensure the code still passed the requirements we set. Branches and pull requests are important to ensure that the functionality of the main branch, which is actually running the program or live service, remains stable and working as intended.
 
 ### Question 10
 
@@ -262,7 +261,7 @@ The final command is necessary for installing the development environment as a p
 >
 > Answer:
 
---- question 10 fill here ---
+We used DVC through the cloud, to have control of the data and easy usage of the data for all participants. This ensured all of the group members had access to the same data. We did not update or add to the dataset throughout the project, however using DVC would have made this easier and shown when the data was changed or added to. Version controlling your data is beneficial in the same way that it is beneficial to version control your code. It allows us to know what versions of data was used at what times, and what experiments. This also makes it possible to revert to older versions of data in case something went wrong.
 
 ### Question 11
 
@@ -279,7 +278,8 @@ The final command is necessary for installing the development environment as a p
 >
 > Answer:
 
---- question 11 fill here ---
+We used a workflow which runs the tests using pytest and test code coverage when doing pull requests and pushes to the master branch. This tests our code using three operating systems: Windows, Ubuntu and MacOS. It also tests on 2 different versions of python. We use pip cache for faster testing. We also have a dependabot which is triggered monthly to ensure all dependencies are updated and work together. The continuous testing is divided into a tests.yaml file, and the dependabot is in a dependabot.yaml file. One of the tests involves dataloading, which required the data to be download on GitHub for the loading to be actually tested. This slows down the tests, but avoids the issue of being unable to push large datasets to a GitHub repository, while retaining the ability to test the functionality.
+An example of a triggered workflow can be found here: https://github.com/Simo067m/02476_mlops_S25/actions/runs/12922261069. This workflow includes the unit tests from the project and is a successful run where all tests passed. On top of these, some cloud triggers also run on GitHub, but these are not defined in the .github folder. They are therefore not directly part of the GitHub workflows, but are still necessary to pass for a branch to be able to merge to master.
 
 ## Running code and tracking experiments
 
@@ -298,7 +298,7 @@ The final command is necessary for installing the development environment as a p
 >
 > Answer:
 
---- question 12 fill here ---
+When running experiments we used Wandb Sweeps and Wandb configurations to run with different hyperparameters. The sweep is initialized in a config file. The file can be run either using argparser or the invoke setup. Using invoke is simply done as: invoke train. If hyperparameters are not being tuned, config files are used, loaded by hydra. Then, the train script is simply run when the config file exists: python src/mlops_grp5/train.py.
 
 ### Question 13
 
@@ -313,7 +313,7 @@ The final command is necessary for installing the development environment as a p
 >
 > Answer:
 
---- question 13 fill here ---
+When starting training, a run is created in Wandb, which logs the hyperparameters and any information and metrics about how the training goes. The hyperparameters are loaded through config files, which makes it possible to re-run the experiment by loading the same config file. The trained model is saved locally and in the Wand model registry, allowing it to be loaded in for future inference. The larger hyperparameter sweeps were run using a sweep.yaml config file, which can be used again to rerun and reproduce the same results. To reproduce an experiment one would need the config file with the hyperparameters and the name of the model. The name of the model and other information during training is logged in a log file under the logs/ directory.
 
 ### Question 14
 
@@ -330,7 +330,14 @@ The final command is necessary for installing the development environment as a p
 >
 > Answer:
 
---- question 14 fill here ---
+We used Wandb to log metrics from experiments, utilizing the features for sharing and experiment tracking.
+![Figure 1](figures/wandb_one.png)
+As seen in the first image, we track the loss during training both for training steps and for validation steps. This is a numerical metric that is logged by the pytorch-lightning model. It shows the progress of the model loss during each training epoch, and the same for the validation steps. The graph is layered with multiple runs and experiments, which are labeled in the legend below the graph title.
+![Figure 2](figures/wandb_two.png)
+As seen in the second image, during the testing step, there is only a single epoch naturally, so we do not have a graph the same way as the training loss graphs. Instead, it is simply a measure of how high the accuracy was on the test set after the model finished training. Since the graph is visualized as a bar even if the metric is simply one number, it makes it easy to compare visually what experiments performed better than others.
+![Figure 3](figures/wandb_sweep.png)
+As seen in the third image, hyperparameter sweeps are visualized with the hyperparameters that were tested during the search.
+The loss metrics are important since they show how well the training is going, as we want to minimize the loss, meaning this graph should have an overall decline over the progress of the training. The accuracy is important in a different way, since it shows how often the model predicts correctly, so we want this metric to be as high as possible.
 
 ### Question 15
 
@@ -345,7 +352,7 @@ The final command is necessary for installing the development environment as a p
 >
 > Answer:
 
---- question 15 fill here ---
+We have several images in our project: one for training, two for api deployment, and one for frontend deployment. For example, in order to run the training docker image, in which it is assumed that the hyperparameter config file is already contained, you would run: docker run --name *experiment_name* train:latest. Since the config file is contained in the image, there is no need to add any command line arguments. Having a dockerfile allows containerization and deployment, and an image can be automatically built from a dockerfile using automated workflows when code updates happen. This could be automatically training a new model and deploying it when changes are made to the model script.
 
 ### Question 16
 
@@ -360,7 +367,7 @@ The final command is necessary for installing the development environment as a p
 >
 > Answer:
 
---- question 16 fill here ---
+Debugging was done using the native visual studio code debugger. Sometimes debugging was also done by print statements in the code and running it like normal. In generally our code is relatively simple and does not include many different scripts, therefore we opted to not perform profiling as there are not many changes to be made to the training loop, as this is handled by pytorch-lightning and is not defined by us. This does not mean that the code is perfect, but we do not believe that profiling will provide much in terms of optimization compared to a larger project that is involved with more parts than this one. 
 
 ## Working in the cloud
 
@@ -377,7 +384,7 @@ The final command is necessary for installing the development environment as a p
 >
 > Answer:
 
---- question 17 fill here ---
+
 
 ### Question 18
 
@@ -516,7 +523,7 @@ The final command is necessary for installing the development environment as a p
 >
 > Answer:
 
---- question 27 fill here ---
+In total we used credits worth 1.14$. The most expensive thing was artifact registry, taking up around 50% of credits. The next most expensive was the compute engine. This was due to the nature of the google cloud platform, where running code in a virtual machine is much more costly than storing data in the cloud. In general, working in the cloud is very powerful, but can also be very convoluted, as there are many, many different services which all require their own setup. Security and costs are different concerns which you do not consider as often when working locally.
 
 ### Question 28
 
@@ -532,7 +539,7 @@ The final command is necessary for installing the development environment as a p
 >
 > Answer:
 
---- question 28 fill here ---
+We implemented a frontend for our API. Since the model is an image model for classifying fresh or rotten fruits and vegetables, we wanted to allow the user to easily upload images. This was done via a frontend.
 
 ### Question 29
 
@@ -549,7 +556,8 @@ The final command is necessary for installing the development environment as a p
 >
 > Answer:
 
---- question 29 fill here ---
+![Pipeline](figures/pipeline.png)
+The figure shows the overall structure of the pipeline. A developer pushes code to the GitHub repository, which triggers GitHub actions to perform tests. This also triggers an action in the cloud to create a new docker image based on the updated code. When the dev runs an experiment from a config file loaded by Hydra, the progess is logged to Wandb. At the end of the training, the model is saved to the Wandb model registry. On the Google cloud platform, a docker image is created for the API which then can be accessed by the end user. This makes the API use the latest model. When the user accesses the API, the latest API docker image is pulled for inference, and the user can upload their image to the API frontend to get a response. The user can then visually see what the result of the model inference was. The data also exists on the Google Cloud Platform, which can then be intertwined with the docker images created for training, as data can simply be pulled from the Google Cloud Buckets, making it unnecessary to have a local copy of the data. When the user interacts with the API, this can also be monitored on the Google Cloud Platform, making the connection double sided.
 
 ### Question 30
 
@@ -563,7 +571,7 @@ The final command is necessary for installing the development environment as a p
 >
 > Answer:
 
---- question 30 fill here ---
+Many of the challenges in the project was not necessarily using a tool by itself in the project, but rather the integration of multiple new tools together at the same time. For example, when setting up config files by hydra, we experienced issues in other scripts, as Hydra wants to be initialized once, and only once, but we wanted to have multiple config files for data and models seperately. This meant having to redo how some functionality worked in order to accomodate being sure that Hydra always only initializes once. As mentioned previously, working in the cloud can be quite complicated, especially when you are not very used to it. The abundance of functions makes it very easy to get disoriented, and the level of security is very different to working only locally, which is what we are most used to. Docker also caused some issues, as it can be quite abstract to understand how it works, and the images tend to be quite large even when you make sure to keep them as small as possible. Working with creating a package and having a pyproject.toml file also gave a few issues with relative imports and when importing a script from a directory that is far away from the current directory. An example of this is importing functions from src/ in the tests/ directory. However, this could largely be fixed by making sure the package was installed locally and by using absolute imports via the package.
 
 ### Question 31
 
@@ -581,4 +589,8 @@ The final command is necessary for installing the development environment as a p
 > *We have used ChatGPT to help debug our code. Additionally, we used GitHub Copilot to help write some of our code.*
 > Answer:
 
---- question 31 fill here ---
+Student s214592 was in charge of setting up the initial template and the model training. They also setup the train dockerfile, local logging and a few unit tests.
+Student s214634 was in charge of Wandb logging and model registry, hyperparameter sweeping and training updates.
+Student s214605 was in charge of cloud deployment and the GCP project including vm-integration and data storage.
+Student s214641 was in charge of API development and deployment of it, as well as load testing and unit testing of the API.
+We have used ChatGPT to help debug our code and to generate some low-level logic code.

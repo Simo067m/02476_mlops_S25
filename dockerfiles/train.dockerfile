@@ -7,7 +7,7 @@ RUN apt update && \
 
 COPY src src/
 COPY requirements_pipreqs.txt requirements.txt
-# COPY data/fruits_vegetables_dataset/processed_data data/fruits_vegetables_dataset/processed_data
+COPY data/fruits_vegetables_dataset/processed_data data/fruits_vegetables_dataset/processed_data
 COPY README.md README.md
 COPY pyproject.toml pyproject.toml
 

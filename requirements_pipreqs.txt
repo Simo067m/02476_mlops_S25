@@ -1,7 +1,0 @@
-fastapi==0.115.6
-kagglehub==0.3.6
-locustio==0.999
-loguru==0.7.3
-Markdown==3.7
-timm==1.0.14
-torchvision==0.20.1
