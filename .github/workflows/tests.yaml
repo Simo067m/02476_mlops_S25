@@ -37,11 +37,15 @@ jobs:
         run: |
           pip install -e .
 
-      - name: Run tests & coverage
+      - name: Run unit tests and calculate coverage
         run: |
           coverage run --rcfile=.coveragerc -m pytest --disable-warnings tests/
           coverage report -m
 
-      - name: Run load tests
+      - name: Run Locust Load Tests Standard API
         run: |
-          locust -f tests/performance/locustfile.py --headless --users 10 --spawn-rate 1 --run-time 1m --host=https://mlops-api-298235842440.europe-west1.run.app
+          locust -f tests/performance/api_locustfile.py --headless --users 10 --spawn-rate 1 --run-time 1m --host=https://mlops-api-298235842440.europe-west1.run.app
+
+      - name: Run Locust Load Tests ONNX API
+        run: |
+          locust -f tests/performance/onnx_locustfile.py --headless --users 10 --spawn-rate 1 --run-time 1m --host=https://mlops-onnx-api-298235842440.europe-west1.run.app
