@@ -6,7 +6,7 @@ steps:
     'build',
     '.',
     '-t',
-    'europe-west1-docker.pkg.dev/premium-portal-447810-a6/group5-repo/frontend_image',
+    'europe-west1-docker.pkg.dev/premium-portal-447810-a6/group5-repo/frontend',
     '-f',
     'dockerfiles/frontend.dockerfile'
   ]
@@ -16,7 +16,7 @@ steps:
   id: 'Push Frontend Container Image'
   args: [
     'push',
-    'europe-west1-docker.pkg.dev/premium-portal-447810-a6/group5-repo/frontend_image'
+    'europe-west1-docker.pkg.dev/premium-portal-447810-a6/group5-repo/frontend'
   ]
 
 # Step 3: Deploy the frontend image to Cloud Run
@@ -27,7 +27,7 @@ steps:
     'deploy',
     'frontend',
     '--image',
-    'europe-west1-docker.pkg.dev/premium-portal-447810-a6/group5-repo/frontend_image',
+    'europe-west1-docker.pkg.dev/premium-portal-447810-a6/group5-repo/frontend',
     '--region',
     'europe-west1',
     '--platform',
