@@ -5,7 +5,8 @@ January 2025 version of 02476 Machine Learning Operations.
 Group 5:
 Katharina Strauss Søgaard (s214634), 
 Cecilie Dahl Hvilsted (s214605),
-Simon Stenbæk Jensen (s214592)
+Simon Stenbæk Jensen (s214592),
+Daniel Damkjær Ries (s214641)
 
 # Project description
 **Freshness classification of fruits and vegetables via image recognition**

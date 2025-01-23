@@ -85,11 +85,11 @@ will check the repositories and the code to verify your answers.
 * [x] Create a trigger workflow for automatically building your docker images (M21)
 * [x] Get your model training in GCP using either the Engine or Vertex AI (M21)
 * [x] Create a FastAPI application that can do inference using your model (M22)
-* [ ] Deploy your model in GCP using either Functions or Run as the backend (M23)
+* [x] Deploy your model in GCP using either Functions or Run as the backend (M23)
 * [x] Write API tests for your application and setup continues integration for these (M24)
-* [ ] Load test your application (M24)
-* [ ] Create a more specialized ML-deployment API using either ONNX or BentoML, or both (M25)
-* [ ] Create a frontend for your API (M26)
+* [x] Load test your application (M24)
+* [x] Create a more specialized ML-deployment API using either ONNX or BentoML, or both (M25)
+* [x] Create a frontend for your API (M26)
 
 ### Week 3
 
@@ -163,7 +163,7 @@ We used the third-party framework pytorch-image-models from huggingface. We used
 >
 > Answer:
 
-We used requirements.txt files for managing our dependencies. The list was auto-generated using pipreqs. The requirements are divided into requirements.txt, requirements_dev.txt and requirements_test.txt. The regular requirements file is required to run the scripts in the environment. The dev requirements are necessary for developing, including formatting tools like ruff, which are not strictly required for running the scripts. The final requirements for testing is necessary for running the unit tests. To get a complete copy of our development environment, one would have to run the following commands:
+We used requirements.txt files for managing our dependencies. The list was auto-generated using pipreqs. The requirements are divided into requirements.txt, requirements_dev.txt, requirements_frontend.txt and requirements_test.txt. The regular requirements file is required to run the scripts in the environment. The dev requirements are necessary for developing, including formatting tools like ruff, which are not strictly required for running the scripts. The frontend requirements are used for the Streamlit application. The final requirements for testing is necessary for running the unit tests. To get a complete copy of our development environment, one would have to run the following commands:
 pip install -r requirements.txt -r requirements_dev.txt
 pip install -e .
 The final command is necessary for installing the development environment as a package.
@@ -458,7 +458,8 @@ Debugging was done using the native visual studio code debugger. Sometimes debug
 >
 > Answer:
 
---- question 23 fill here ---
+We succesfully wrote APIs for our model using FastAPI. Initially, we created a regular FastAPI for inference with our model. This involved loading the model at application startup using FastAPI's lifespan feature, preprocessing uploaded images, and performing inference to classify images as "Fresh" or "Rotten". Additionally, we included error handling to manage invalid file uploads gracefully, enhancing the robustness of our API.
+To make the API faster and more efficient, we converted our model to the ONNX format and created the ONNX API. ONNX is built for quicker predictions and works across different platforms, making it ideal for deployment. Using ONNX Runtime for predictions allowed us to take advantage of hardware acceleration, which reduced the time it takes to process requests. We also updated the ONNX API to provide not just the predicted class but also confidence scores, giving users more detailed and understandable results.
 
 ### Question 24
 
@@ -474,7 +475,14 @@ Debugging was done using the native visual studio code debugger. Sometimes debug
 >
 > Answer:
 
---- question 24 fill here ---
+We successfully deployed our API both locally and in the cloud. For deployment, we containerized our application using Docker, creating a dedicated Dockerfile for both the regular and ONNX APIs. Locally, we tested the containerized API by running it with Docker and invoking it via curl commands to ensure the endpoints functioned as expected.
+For cloud deployment, we used Google Cloud Run, which allows for easy deployment of containerized applications. We created a cloudbuild.yaml file for each API to automate the process, including building the Docker image, pushing it to Google Artifact Registry, and deploying it to Cloud Run. 
+To invoke the deployed service, users can send a POST request to the /predict endpoint with an image file using the following command:
+"curl -X POST -F "file=@<path_to_image>" <cloud_run_url>/predict/"
+
+For example, to classify an image with the ONNX-API we used:
+"curl -X POST -F "file=@tests/data/fresh_sample.jpg" https://mlops-onnx-api-298235842440.europe-west1.run.app/predict/"
+
 
 ### Question 25
 
@@ -489,7 +497,14 @@ Debugging was done using the native visual studio code debugger. Sometimes debug
 >
 > Answer:
 
---- question 25 fill here ---
+We performed both unit testing and load testing for both of our APIs to ensure their reliability and scalability. For unit testing, we used Pytest to test individual components of the applications, such as image preprocessing and the inference logic. These tests helped us confirm that the components of both APIs worked in isolation and returned the expected results.
+
+The load testing of both the standard API and the ONNX-optimized API was performed using Locust. The tests simulated 10 concurrent users with a spawn rate of 1 user per second over a 1-minute duration. The tests were (as all other tests) performed on different systems and python versions.
+On the standard API, using Windows and Python 3.12, the /predict endpoint had a median response time of 270 ms, with 95% of requests completing under 440 ms, while the / endpoint had faster response times, with a median of 160 ms and 95% completing under 390 ms. The maximum response time was 750 ms.
+
+The ONNX API performed better overall. As an example on Windows with python 3.12 the /predict endpoint had a median response time of 200 ms, with 95% completing under 360 ms, and the / endpoint had a median of 150 ms, with 95% completing under 290 ms. The maximum response time was 410 ms, significantly lower than the standard API.
+
+These tests confirmed that the ONNX API is faster and more scalable, with both APIs demonstrating stability under load without failures.
 
 ### Question 26
 
@@ -539,7 +554,11 @@ In total we used credits worth 1.14$. The most expensive thing was artifact regi
 >
 > Answer:
 
-We implemented a frontend for our API. Since the model is an image model for classifying fresh or rotten fruits and vegetables, we wanted to allow the user to easily upload images. This was done via a frontend.
+We implemented a user-friendly frontend for our API to make it easier for users to interact with the model. Since the model classifies images of fruits and vegetables as either "Fresh" or "Rotten," we designed the frontend to allow users to easily upload images and view the predictions in a simple interface.
+
+The frontend was built using Streamlit, which is a tool that can be used to create interactive interfaces. Users can upload a fruit or vegetable image, which is sent to the backend API for processing. The results, including predictions and confidence scores, are shown directly on the screen, making it easy to understand.
+
+To make the frontend available online, we used Docker to package it and deployed it on Google Cloud Run. This setup ensures it can handle multiple users at once and works smoothly with the backend API. The frontend makes the API more user-friendly, especially for non-technical users, and provides a complete way to showcase what our model can do.
 
 ### Question 29
 
@@ -592,5 +611,5 @@ Many of the challenges in the project was not necessarily using a tool by itself
 Student s214592 was in charge of setting up the initial template and the model training. They also setup the train dockerfile, local logging and a few unit tests.
 Student s214634 was in charge of Wandb logging and model registry, hyperparameter sweeping and training updates.
 Student s214605 was in charge of cloud deployment and the GCP project including vm-integration and data storage.
-Student s214641 was in charge of API development and deployment of it, as well as load testing and unit testing of the API.
+Student s214641 was in charge of API development and deployment of it, as well as load testing and unit testing of the API and development and deployment of the Steamlit frontend. 
 We have used ChatGPT to help debug our code and to generate some low-level logic code.
