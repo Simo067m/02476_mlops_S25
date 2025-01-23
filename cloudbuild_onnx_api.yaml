@@ -1,33 +1,40 @@
 steps:
+# Step 1: Build the Docker image for the frontend
 - name: 'gcr.io/cloud-builders/docker'
-  id: 'Build ONNX container image'
+  id: 'Build Frontend Container Image'
   args: [
     'build',
     '.',
     '-t',
-    'europe-west1-docker.pkg.dev/premium-portal-447810-a6/group5-repo/mlops_onnx_image',
+    'europe-west1-docker.pkg.dev/premium-portal-447810-a6/group5-repo/frontend_image',
     '-f',
-    'dockerfiles/onnx_api.dockerfile'
+    'dockerfiles/frontend.dockerfile'
   ]
+
+# Step 2: Push the Docker image to Artifact Registry
 - name: 'gcr.io/cloud-builders/docker'
-  id: 'Push ONNX container image'
+  id: 'Push Frontend Container Image'
   args: [
     'push',
-    'europe-west1-docker.pkg.dev/premium-portal-447810-a6/group5-repo/mlops_onnx_image'
+    'europe-west1-docker.pkg.dev/premium-portal-447810-a6/group5-repo/frontend_image'
   ]
+
+# Step 3: Deploy the frontend image to Cloud Run
 - name: 'gcr.io/cloud-builders/gcloud'
-  id: 'Deploy ONNX API to Cloud Run'
+  id: 'Deploy Frontend to Cloud Run'
   args: [
     'run',
     'deploy',
-    'mlops-onnx-api',
+    'frontend',
     '--image',
-    'europe-west1-docker.pkg.dev/premium-portal-447810-a6/group5-repo/mlops_onnx_image',
+    'europe-west1-docker.pkg.dev/premium-portal-447810-a6/group5-repo/frontend_image',
     '--region',
     'europe-west1',
     '--platform',
     'managed',
     '--allow-unauthenticated'
   ]
+
+# Options for logging
 options:
   logging: CLOUD_LOGGING_ONLY
