@@ -10,7 +10,7 @@ WORKDIR /app
 
 # Copy requirements and install them
 COPY requirements_frontend.txt /app/requirements_frontend.txt
-RUN --mount=type=cache,target=/root/.cache/pip pip install -r requirements_frontend.txt
+RUN pip install -r requirements_frontend.txt
 
 # Copy the application files (entire src folder)
 COPY src /app/src
