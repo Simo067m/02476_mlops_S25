@@ -384,7 +384,14 @@ Debugging was done using the native visual studio code debugger. Sometimes debug
 >
 > Answer:
 
-
+Several GCP services are used throughout this project (implemented by following M20 and M21). Some are listed below:
+- Cloud Storage served as the main storage for datasets and processed data, such as data.pt and labels.pt.
+- IAM managed permissions and access control, ensuring the necessary services had the right roles to interact securely.
+- Artifact Registry was utilized to store Docker images required for training.
+- Cloud Build was employed to build these Docker images from source code.
+- Cloud Logging helped debug and monitor training jobs by providing access to logs.
+- Vertex AI was used for running custom training jobs and managing machine learning workflows.
+- Wandb was integrated for experiment tracking, enabling logging of metrics like training loss and hyperparameters.
 
 ### Question 18
 
@@ -399,7 +406,7 @@ Debugging was done using the native visual studio code debugger. Sometimes debug
 >
 > Answer:
 
---- question 18 fill here ---
+In this project, we used Google Compute Engine to power VMs for running training jobs.The training jobs used the n1-highmem-2 machine type, which provides 2 vCPUs and 13 GB of memory. This machine type is well-suited for workloads that require a higher memory-to-CPU ratio, such as training machine learning models on moderately sized datasets. The VMs were also provisioned as part of the Vertex AI custom training workflow, where the config.yaml defined the resource specifications. With replicaCount set to 1, a single VM was used to execute the training script. This setup ensured that the training workflows were efficient and appropriately resourced for the project’s needs.
 
 ### Question 19
 
@@ -408,7 +415,11 @@ Debugging was done using the native visual studio code debugger. Sometimes debug
 >
 > Answer:
 
---- question 19 fill here ---
+The Cloud Storage holds 4 buckets, 1 for our dataset, 2 for functions and 1 for cloudbuild:
+![Figure 4](figures/all_buckets.png)
+
+The bucket for our dataset looks like this:
+![Figure 5](figures/bucket_data.png)
 
 ### Question 20
 
@@ -417,7 +428,10 @@ Debugging was done using the native visual studio code debugger. Sometimes debug
 >
 > Answer:
 
---- question 20 fill here ---
+![Figure 6](figures/artifact_registry.png)
+
+The artifact registry 'group5-repo' holding all Docker images for training and API are seen here: 
+![Figure 7](figures/artifact_repo.png)
 
 ### Question 21
 
@@ -426,7 +440,9 @@ Debugging was done using the native visual studio code debugger. Sometimes debug
 >
 > Answer:
 
---- question 21 fill here ---
+The cloudbuilds are mostly done using triggers. However, earlier in the project they are created manually.
+
+![Figure 8](figures/cloudbuild_history.png)
 
 ### Question 22
 
@@ -441,7 +457,7 @@ Debugging was done using the native visual studio code debugger. Sometimes debug
 >
 > Answer:
 
---- question 22 fill here ---
+Yes, we successfully trained my model in the cloud using Vertex AI. The training was configured through a config.yaml file,which defined the compute resources, container image, and training parameters. The training script was packaged into a Docker image and stored in the Artifact Registry, and the dataset was accessed directly from Cloud Storage, which was mounted in the training environment. The job was triggered using the ‘gcloud ai custom-jobs create’ command, referencing the config.yaml. This setup included parameters like the maximum number of epochs and environment variables, such as the WANDB_API_KEY for logging metrics to Weights & Biases. Vertex AI handled provisioning the VMs, running the container, and monitoring the job, ensuring a streamlined and efficient workflow. Overall, the training process was efficient and well-suited for cloud-based machine learning workflows.
 
 ## Deployment
 
