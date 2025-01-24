@@ -37,13 +37,15 @@ We will use one (or more) of the pre-trained models from Pytorch-image-models, a
 
 The directory structure of the project looks like this:
 ```txt
+├── .dvc/
+│   └── tmp/
 ├── .github/                  # Github actions and dependabot
 │   ├── dependabot.yaml
 │   └── workflows/
 │       └── tests.yaml
 ├── configs/                  # Configuration files
 ├── data/                     # Data directory
-│   └── Fruit_Vegetables_Dataset(12000)/
+│   └── fruit_vegetables_dataset/
 │       ├── Fruits/
 │       │   ├── FreshApple/
 │       │   ├── FreshBanana/
@@ -54,7 +56,10 @@ The directory structure of the project looks like this:
 │       │   ├── RottenBanana/
 │       │   ├── RottenMango/
 │       │   ├── RottenOrange/
-│       │   ├── RottenStrawberry/
+│       │   └── RottenStrawberry/
+│       ├── processed_data/
+│       │   ├── data.pt
+│       │   └── labels.pt
 │       └── Vegetables/
 │           ├── FreshBellpepper/
 │           ├── FreshCarrot/
@@ -64,38 +69,59 @@ The directory structure of the project looks like this:
 │           ├── RottenCarrot/
 │           ├── RottenCucumber/
 │           ├── RottenPotato/
-│           ├── RottenTomato/
+│           └── RottenTomato/
 ├── dockerfiles/              # Dockerfiles
-│   ├── api.Dockerfile
-│   └── train.Dockerfile
+│   ├── api.dockerfile
+│   ├── frontend.dockerfile
+│   ├── onnx_api.dockerfile
+│   └── train.dockerfile
 ├── docs/                     # Documentation
 │   ├── mkdocs.yml
 │   └── source/
 │       └── index.md
+├── mlops-grp5/
 ├── models/                   # Trained models
+│   ├── model.pth
+│   └── model.onnx
 ├── notebooks/                # Jupyter notebooks
 ├── reports/                  # Reports
+│   ├── README.md
+│   ├── report.py
 │   └── figures/
 ├── src/                      # Source code
-│   ├── project_name/
+│   ├── mlopd_grp5/
 │   │   ├── __init__.py
 │   │   ├── api.py
-│   │   ├── data.py
-│   │   ├── evaluate.py
-│   │   ├── models.py
+│   │   ├── dataloaders.py
+│   │   ├── frontend.py
+│   │   ├── logger.py
+│   │   ├── onnx_api.py
+│   │   ├── model.py
 │   │   ├── train.py
 │   │   └── visualize.py
-└── tests/                    # Tests
+├── tests/                    # Tests
 │   ├── __init__.py
+│   ├── data/
+│   ├── performance/
+│   │   ├── api.locustfile.py
+│   │   └── onnx_locustfile.py
 │   ├── test_api.py
 │   ├── test_data.py
+│   ├── test_onnx_api.py
 │   └── test_model.py
+├── wandb/ 
 ├── .gitignore
+├── cloudbuild_api.yaml
+├── cloudbuild_frontend.yaml
+├── cloudbuild_onnx_api.yaml
+├── config.yaml
 ├── .pre-commit-config.yaml
 ├── LICENSE
 ├── pyproject.toml            # Python project file
 ├── README.md                 # Project README
 ├── requirements.txt          # Project requirements
+├── requirements_frontend.txt
+├── requirements_test.txt
 ├── requirements_dev.txt      # Development requirements
 └── tasks.py                  # Project tasks
 ```

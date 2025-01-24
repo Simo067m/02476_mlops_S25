@@ -457,7 +457,7 @@ The cloudbuilds are mostly done using triggers. However, earlier in the project 
 >
 > Answer:
 
-Yes, we successfully trained my model in the cloud using Vertex AI. The training was configured through a config.yaml file,which defined the compute resources, container image, and training parameters. The training script was packaged into a Docker image and stored in the Artifact Registry, and the dataset was accessed directly from Cloud Storage, which was mounted in the training environment. The job was triggered using the ‘gcloud ai custom-jobs create’ command, referencing the config.yaml. This setup included parameters like the maximum number of epochs and environment variables, such as the WANDB_API_KEY for logging metrics to Weights & Biases. Vertex AI handled provisioning the VMs, running the container, and monitoring the job, ensuring a streamlined and efficient workflow. Overall, the training process was efficient and well-suited for cloud-based machine learning workflows.
+We successfully trained my model in the cloud using Vertex AI. The training was configured through a config.yaml file,which defined the compute resources, container image, and training parameters. The training script was packaged into a Docker image and stored in the Artifact Registry, and the dataset was accessed directly from Cloud Storage, which was mounted in the training environment. The job was triggered using the ‘gcloud ai custom-jobs create’ command, referencing the config.yaml. This setup included parameters like the maximum number of epochs and environment variables, such as the WANDB_API_KEY for logging metrics to Weights & Biases. Vertex AI handled provisioning the VMs, running the container, and monitoring the job, ensuring a streamlined and efficient workflow. Overall, the training process was efficient and well-suited for cloud-based machine learning workflows.
 
 ## Deployment
 
@@ -516,6 +516,7 @@ For example, to classify an image with the ONNX-API we used:
 We performed both unit testing and load testing for both of our APIs to ensure their reliability and scalability. For unit testing, we used Pytest to test individual components of the applications, such as image preprocessing and the inference logic. These tests helped us confirm that the components of both APIs worked in isolation and returned the expected results.
 
 The load testing of both the standard API and the ONNX-optimized API was performed using Locust. The tests simulated 10 concurrent users with a spawn rate of 1 user per second over a 1-minute duration. The tests were (as all other tests) performed on different systems and python versions.
+
 On the standard API, using Windows and Python 3.12, the /predict endpoint had a median response time of 270 ms, with 95% of requests completing under 440 ms, while the / endpoint had faster response times, with a median of 160 ms and 95% completing under 390 ms. The maximum response time was 750 ms.
 
 The ONNX API performed better overall. As an example on Windows with python 3.12 the /predict endpoint had a median response time of 200 ms, with 95% completing under 360 ms, and the / endpoint had a median of 150 ms, with 95% completing under 290 ms. The maximum response time was 410 ms, significantly lower than the standard API.
