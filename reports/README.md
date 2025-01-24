@@ -513,14 +513,11 @@ For example, to classify an image with the ONNX-API we used:
 >
 > Answer:
 
-We performed both unit testing and load testing for both of our APIs to ensure their reliability and scalability. For unit testing, we used Pytest to test individual components of the applications, such as image preprocessing and the inference logic. These tests helped us confirm that the components of both APIs worked in isolation and returned the expected results.
+We performed both unit testing and load testing for both of our APIs. For unit testing, we used Pytest to test individual components of the applications, such as image preprocessing and the inference logic. These tests helped us confirm that the components of both APIs worked in isolation and returned the expected results.
 
-The load testing of both the standard API and the ONNX-optimized API was performed using Locust. The tests simulated 10 concurrent users with a spawn rate of 1 user per second over a 1-minute duration. The tests were (as all other tests) performed on different systems and python versions.
-
-On the standard API, using Windows and Python 3.12, the /predict endpoint had a median response time of 270 ms, with 95% of requests completing under 440 ms, while the / endpoint had faster response times, with a median of 160 ms and 95% completing under 390 ms. The maximum response time was 750 ms.
-
-The ONNX API performed better overall. As an example on Windows with python 3.12 the /predict endpoint had a median response time of 200 ms, with 95% completing under 360 ms, and the / endpoint had a median of 150 ms, with 95% completing under 290 ms. The maximum response time was 410 ms, significantly lower than the standard API.
-
+The load testing of both the standard API and the ONNX-optimized API was performed using Locust. The tests simulated 10 concurrent users with a spawn rate of 1 user per second over a 1-minute duration. The tests were performed on different systems and python versions.
+On the standard API, using Windows and Python 3.12, the /predict endpoint had a median response time of 270 ms, with 95% of requests completing under 440 ms. The maximum response time was 750 ms.
+The ONNX API performed better overall. As an example on Windows with python 3.12 the /predict endpoint had a median response time of 200 ms, with 95% completing under 360 ms. The maximum response time was 410 ms, significantly lower than the standard API.
 These tests confirmed that the ONNX API is faster and more scalable, with both APIs demonstrating stability under load without failures.
 
 ### Question 26
@@ -536,7 +533,7 @@ These tests confirmed that the ONNX API is faster and more scalable, with both A
 >
 > Answer:
 
---- question 26 fill here ---
+We didn’t manage to set up monitoring for our deployed model, but it’s something that would have greatly improved the reliability and longevity of the application. For example, we could track key metrics like how many requests the model is receiving, how long it takes to make predictions, and how often errors occur. Using tools like Prometheus, we could expose these metrics on a /metrics endpoint and create dashboards to visualize trends over time. This would also allow us to set up alerts for issues like slow response times or increased errors, so we could quickly fix problems before they impact users.
 
 ## Overall discussion of project
 
